@@ -1,34 +1,38 @@
-import { createSignal } from 'solid-js'
-import solidLogo from './assets/solid.svg'
-import './App.css'
+import { For, createMemo, createSignal, onMount } from "solid-js";
+import "./App.css";
+import ExistingObservation, {ExistingObservationProps} from "./components/ExistingObservation";
+import NewObservation from "./components/NewObservation";
+
 
 function App() {
-  const [count, setCount] = createSignal(0)
+  const [observations, setObservations] = createSignal<ExistingObservationProps[]>([]);
+  onMount(async () => {
+    try {
+      const response = await fetch("/observations");
+      const json = await response.json();
+      setObservations(json);
+    } catch (e) {
+      console.error(e);
+    }
+  });
+  const nextIndex = createMemo(() => {
+    if (observations().length === 0) {
+      return 0;
+    }
+    return Math.max(...observations().map((o) => parseInt(o.id))) + 1;
+  });
 
   return (
-    <div class="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" class="logo" alt="Vite logo" />
-        </a>
-        <a href="https://www.solidjs.com" target="_blank">
-          <img src={solidLogo} class="logo solid" alt="Solid logo" />
-        </a>
-      </div>
-      <h1>Vite + Solid</h1>
-      <div class="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count()}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p class="read-the-docs">
-        Click on the Vite and Solid logos to learn more
-      </p>
-    </div>
-  )
+    <>
+      <h1>Observation Tracker</h1>
+      <For
+        each={observations().sort((a, b) => a.datetime.localeCompare(b.datetime))}
+        fallback={<h2>No observations yet.</h2>}
+        children={(observation, index) => <ExistingObservation data-index={index()} {...observation} />}
+      />
+      <NewObservation id={`${nextIndex()}`} />
+    </>
+  );
 }
 
-export default App
+export default App;

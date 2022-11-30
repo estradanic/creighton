@@ -4,11 +4,12 @@
     "module": "ESNext",
     "moduleResolution": "Node",
     "allowSyntheticDefaultImports": true,
-    "jsx": "preserve"
+    "jsx": "preserve",
+    "lib": ["ES2015", "DOM"],
   },
   "include": [
     "vite.config.ts",
-    "src/entry-server.tsx",
-    "src/vite-env.d.ts"
+    "**/*.ts",
+    "**/*.tsx"
   ]
 }

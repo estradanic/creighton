@@ -1,26 +1,65 @@
 #root {
-  max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.solid:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.observation {
+  padding: 1rem;
+  background-color: lightgray;
+  border: 1px solid black;
+  margin: 1rem;
 }
 
-.card {
-  padding: 2em;
+.new {
+  background-color: lightgreen;
 }
 
-.read-the-docs {
-  color: #888;
+body {
+  background-color: whitesmoke;
+}
+
+h1,h2 {
+  margin-bottom: 8rem;
+}
+
+h1,h2,h3 {
+  flex-basis: 100%;
+  flex-shrink: 0;
+  flex-grow: 1;
+}
+
+input[type="button"] {
+  margin: 0.25rem;
+}
+
+form {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  align-items: center;
+}
+
+form>* {
+  margin: 0.25rem;
+}
+
+form>label {
+  font-weight: bold;
+  flex-basis: 30%;
+  text-align: right;
+  flex-grow: 0;
+  flex-shrink: 0;
+}
+
+form>input,form>select,form>textarea {
+  flex-basis: 60%;
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+
+form>input[type="submit"]:not(:disabled) {
+  cursor: pointer;
 }
