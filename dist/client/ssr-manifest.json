@@ -1,0 +1,125 @@
+{
+  "vite/modulepreload-polyfill": [
+    "/assets/baby.debdab91.png"
+  ],
+  "node_modules/solid-js/dist/solid.js": [
+    "/assets/baby.debdab91.png"
+  ],
+  "node_modules/solid-js/web/dist/web.js": [
+    "/assets/baby.debdab91.png"
+  ],
+  "src/index.css": [
+    "/assets/baby.debdab91.png"
+  ],
+  "node_modules/luxon/src/errors.js": [
+    "/assets/baby.debdab91.png"
+  ],
+  "node_modules/luxon/src/impl/formats.js": [
+    "/assets/baby.debdab91.png"
+  ],
+  "node_modules/luxon/src/zone.js": [
+    "/assets/baby.debdab91.png"
+  ],
+  "node_modules/luxon/src/zones/systemZone.js": [
+    "/assets/baby.debdab91.png"
+  ],
+  "node_modules/luxon/src/zones/IANAZone.js": [
+    "/assets/baby.debdab91.png"
+  ],
+  "node_modules/luxon/src/impl/locale.js": [
+    "/assets/baby.debdab91.png"
+  ],
+  "node_modules/luxon/src/zones/fixedOffsetZone.js": [
+    "/assets/baby.debdab91.png"
+  ],
+  "node_modules/luxon/src/zones/invalidZone.js": [
+    "/assets/baby.debdab91.png"
+  ],
+  "node_modules/luxon/src/impl/zoneUtil.js": [
+    "/assets/baby.debdab91.png"
+  ],
+  "node_modules/luxon/src/settings.js": [
+    "/assets/baby.debdab91.png"
+  ],
+  "node_modules/luxon/src/impl/util.js": [
+    "/assets/baby.debdab91.png"
+  ],
+  "node_modules/luxon/src/impl/english.js": [
+    "/assets/baby.debdab91.png"
+  ],
+  "node_modules/luxon/src/impl/formatter.js": [
+    "/assets/baby.debdab91.png"
+  ],
+  "node_modules/luxon/src/impl/invalid.js": [
+    "/assets/baby.debdab91.png"
+  ],
+  "node_modules/luxon/src/impl/regexParser.js": [
+    "/assets/baby.debdab91.png"
+  ],
+  "node_modules/luxon/src/duration.js": [
+    "/assets/baby.debdab91.png"
+  ],
+  "node_modules/luxon/src/interval.js": [
+    "/assets/baby.debdab91.png"
+  ],
+  "node_modules/luxon/src/info.js": [
+    "/assets/baby.debdab91.png"
+  ],
+  "node_modules/luxon/src/impl/diff.js": [
+    "/assets/baby.debdab91.png"
+  ],
+  "node_modules/luxon/src/impl/digits.js": [
+    "/assets/baby.debdab91.png"
+  ],
+  "node_modules/luxon/src/impl/tokenParser.js": [
+    "/assets/baby.debdab91.png"
+  ],
+  "node_modules/luxon/src/impl/conversions.js": [
+    "/assets/baby.debdab91.png"
+  ],
+  "node_modules/luxon/src/datetime.js": [
+    "/assets/baby.debdab91.png"
+  ],
+  "src/App.css": [
+    "/assets/baby.debdab91.png"
+  ],
+  "src/components/ColorField.tsx": [
+    "/assets/baby.debdab91.png"
+  ],
+  "src/components/DatetimeField.tsx": [
+    "/assets/baby.debdab91.png"
+  ],
+  "src/components/FeelingField.tsx": [
+    "/assets/baby.debdab91.png"
+  ],
+  "src/components/NotesField.tsx": [
+    "/assets/baby.debdab91.png"
+  ],
+  "src/components/StickinessField.tsx": [
+    "/assets/baby.debdab91.png"
+  ],
+  "src/components/Submit.tsx": [
+    "/assets/baby.debdab91.png"
+  ],
+  "src/components/ViscosityField.tsx": [
+    "/assets/baby.debdab91.png"
+  ],
+  "src/components/MenstruationField.tsx": [
+    "/assets/baby.debdab91.png"
+  ],
+  "src/components/ExistingObservation.tsx": [
+    "/assets/baby.debdab91.png"
+  ],
+  "src/components/NewObservation.tsx": [
+    "/assets/baby.debdab91.png"
+  ],
+  "src/App.tsx": [
+    "/assets/baby.debdab91.png"
+  ],
+  "src/entry-client.tsx": [
+    "/assets/baby.debdab91.png"
+  ],
+  "index.html": [
+    "/assets/baby.debdab91.png"
+  ]
+}

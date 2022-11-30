@@ -9,12 +9,80 @@
 
 .observation {
   padding: 1rem;
-  background-color: lightgray;
   border: 1px solid black;
   margin: 1rem;
 }
 
-.new {
+.highlight-color {
+  border: 1px solid black;
+  padding: 1rem;
+}
+
+.stamp {
+  border: 1px solid black;
+  margin-right: 0.5rem;
+}
+
+.red {
+  background-color: red;
+}
+
+.green {
+  background-color: green;
+}
+
+.delete {
+  background-color: lightcoral;
+}
+
+.submit {
+  background-color: lightgreen;
+}
+
+.green-baby {
+  background: green url("/assets/baby.png");
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.white {
+  background: white url("/assets/baby.png");
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.edit-cancel {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.Sunday {
+  background-color: lightblue;
+}
+
+.Monday {
+  background-color: lightyellow;
+}
+
+.Tuesday {
+  background-color: lightpink;
+}
+
+.Wednesday {
+  background-color: lightsalmon;
+}
+
+.Thursday {
+  background-color: lightgoldenrodyellow;
+}
+
+.Friday {
+  background-color: lightcyan;
+}
+
+.Saturday {
   background-color: lightgreen;
 }
 
@@ -23,7 +91,7 @@ body {
 }
 
 h1,h2 {
-  margin-bottom: 8rem;
+  margin-bottom: 2rem;
 }
 
 h1,h2,h3 {
@@ -60,6 +128,6 @@ form>input,form>select,form>textarea {
   flex-shrink: 1;
 }
 
-form>input[type="submit"]:not(:disabled) {
+input[type="submit"]:not(:disabled),button:not(:disabled),input[type="button"]:not(:disabled) {
   cursor: pointer;
 }

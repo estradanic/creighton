@@ -8,7 +8,7 @@ function Submit({disabled = () => false}: SubmitProps) {
   return (
     <>
       <label for="submit"></label>
-      <input type="submit" name="submit" disabled={disabled()} />
+      <input type="submit" name="submit" disabled={disabled()} class="submit" />
     </>
   );
 }

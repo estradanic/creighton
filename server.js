@@ -74,6 +74,16 @@ app.post("/new-observation", async (req, res) => {
   res.redirect("/");
 });
 
+app.post("/delete-observation", async (req, res) => {
+  let observations = [];
+  try {
+    observations = await db.getData("/observations");
+  } catch {}
+  const newObservations = observations.filter((observation) => observation.id !== req.body.id);
+  await db.push("/observations", newObservations);
+  res.redirect("/");
+});
+
 // Serve HTML
 app.use("*", async (req, res) => {
   try {
