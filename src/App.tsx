@@ -26,7 +26,7 @@ function App() {
   return (
     <>
       <h1>Creighton Observation Tracker</h1>
-      <h2>Today"s highlight color: <span class={`highlight-color ${DateTime.now().weekdayLong}`}>{DateTime.now().weekdayLong}</span></h2>
+      <h2>Today's highlight color: <span class={`highlight-color ${DateTime.now().weekdayLong}`}>{DateTime.now().weekdayLong}</span></h2>
       <NewObservation id={nextIndex} />
       <For
         each={observations().sort((a, b) => b.datetime.localeCompare(a.datetime))}
