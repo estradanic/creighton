@@ -1,9 +1,9 @@
 import { defineConfig } from "vite";
 import solid from "vite-plugin-solid";
-import mix, {vercelAdapter} from "vite-plugin-mix";
+import mix from "vite-plugin-mix";
 
 export default defineConfig({
-  plugins: [solid(), mix({handler: "./api.ts", adapter: vercelAdapter()})],
+  plugins: [solid(), mix({handler: "./api.ts"})],
   build: {
     target: "esnext",
   },

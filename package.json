@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "serve": "vite preview"
+    "serve": "vite preview",
+    "start": "npm run build && node build/server.mjs"
   },
   "license": "MIT",
   "devDependencies": {

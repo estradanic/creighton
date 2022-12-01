@@ -1,9 +1,9 @@
 import {Accessor, createSignal} from "solid-js";
 import {DateTime} from "luxon";
-import FeelingField from "./FeelingField";
+import SensationField from "./SensationField";
 import ColorField from "./ColorField";
-import StickinessField from "./StickinessField";
-import ViscosityField from "./ViscosityField";
+import StretchabilityField from "./StretchabilityField";
+import ConsistencyField from "./ConsistencyField";
 import DatetimeField from "./DatetimeField";
 import NotesField from "./NotesField";
 import Submit from "./Submit";
@@ -22,10 +22,10 @@ function NewObservation({id}: NewObservationProps) {
       <form method="post" action="new-observation">
         <input type="hidden" name="id" value={id()} />
         <MenstruationField />
-        <FeelingField />
+        <SensationField />
         <ColorField />
-        <StickinessField />
-        <ViscosityField />
+        <StretchabilityField />
+        <ConsistencyField />
         <DatetimeField datetime={datetime()} setDatetime={setDatetime} />
         <NotesField />
         <Submit />

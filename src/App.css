@@ -26,6 +26,7 @@
 .highlight-color {
   border: 1px solid black;
   padding: 1rem;
+  line-height: 3;
 }
 
 .stamp {
@@ -43,6 +44,11 @@
 
 .delete {
   background-color: lightcoral;
+}
+
+.incomplete {
+  color: red;
+  margin-left: 1rem;
 }
 
 .submit {
