@@ -6,7 +6,7 @@
     "dev": "vite",
     "build": "vite build",
     "serve": "vite preview",
-    "start": "npm run build && node build/server.mjs"
+    "start": "npm i -g vite && npm run build && node build/server.mjs"
   },
   "license": "MIT",
   "devDependencies": {
