@@ -6,16 +6,14 @@
     "dev": "vite",
     "build": "vite build",
     "serve": "vite preview",
-    "start": "npm i -g vite && npm run build && node build/server.mjs"
+    "start": "npm run build && node build/server.mjs"
   },
   "license": "MIT",
-  "devDependencies": {
+  "dependencies": {
     "vite": "^3.0.9",
     "vite-plugin-solid": "^2.3.0",
     "@types/express": "^4.17.14",
-    "vite-plugin-mix": "^0.4.0"
-  },
-  "dependencies": {
+    "vite-plugin-mix": "^0.4.0",
     "express": "^4.18.2",
     "luxon": "^3.1.1",
     "node-json-db": "^2.1.3",
