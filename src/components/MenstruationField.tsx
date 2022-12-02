@@ -1,7 +1,7 @@
 import { Accessor } from "solid-js";
 
 export type MenstruationFieldProps = {
-  menstruation?: "none" | "very-light" | "light" | "medium" | "heavy";
+  menstruation?: "none" | "very-light" | "light" | "medium" | "heavy" | "very-heavy";
   setMenstruation?: (menstruation: MenstruationFieldProps["menstruation"]) => void;
   disabled?: Accessor<boolean>;
 }
@@ -25,6 +25,7 @@ function MenstruationField({menstruation, disabled = () => false, setMenstruatio
         <option value="light">Light</option>
         <option value="medium">Medium</option>
         <option value="heavy">Heavy</option>
+        <option value="very-heavy">Very Heavy</option>
       </select>
     </>
   );

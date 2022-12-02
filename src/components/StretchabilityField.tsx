@@ -20,7 +20,7 @@ function StretchabilityField({stretchability, setStretchability, disabled = () =
           : undefined
         }
       >
-        <option value="none">None (Could not pick up)</option>
+        <option value="none">None (Couldn't pick up)</option>
         <option value="sticky">Sticky (0 - 1/4 inch)</option>
         <option value="tacky">Tacky (1/4 - 3/4 inch)</option>
         <option value="stretchy">Stretchy (3/4 inch or more)</option>

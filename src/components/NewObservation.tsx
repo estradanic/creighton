@@ -13,6 +13,7 @@ import abbreviation from "../functions/abbreviation";
 import byDay from "../functions/byDay";
 import stamp from "../functions/stamp";
 import { Observation } from "./ExistingObservation";
+import AppearanceField, { AppearanceFieldProps } from "./AppearanceField";
 
 export type NewObservationProps = {
   id: Accessor<string>;
@@ -23,7 +24,8 @@ function NewObservation({id, observations}: NewObservationProps) {
   const [datetime, setDatetime] = createSignal(DateTime.now());
   const [menstruation, setMenstruation] = createSignal<MenstruationFieldProps["menstruation"]>("none");
   const [color, setColor] = createSignal<ColorFieldProps["color"]>("na");
-  const [consistency, setConsistency] = createSignal<ConsistencyFieldProps["consistency"]>("dry");
+  const [consistency, setConsistency] = createSignal<ConsistencyFieldProps["consistency"]>("na");
+  const [appearance, setAppearance] = createSignal<AppearanceFieldProps["appearance"]>("dry");
   const [sensation, setSensation] = createSignal<SensationFieldProps["sensation"]>("dry");
   const [stretchability, setStretchability] = createSignal<StretchabilityFieldProps["stretchability"]>("none");
 
@@ -36,6 +38,7 @@ function NewObservation({id, observations}: NewObservationProps) {
       consistency: consistency(),
       datetime: datetime().toISO(),
       menstruation: menstruation(),
+      appearance: appearance(),
       notes: "",
     };
   };
@@ -55,6 +58,7 @@ function NewObservation({id, observations}: NewObservationProps) {
         <input type="hidden" name="id" value={id()} />
         <MenstruationField menstruation={menstruation()} setMenstruation={setMenstruation} />
         <SensationField sensation={sensation()} setSensation={setSensation} />
+        <AppearanceField appearance={appearance()} setAppearance={setAppearance} />
         <ColorField color={color()} setColor={setColor} />
         <StretchabilityField stretchability={stretchability()} setStretchability={setStretchability} />
         <ConsistencyField consistency={consistency()} setConsistency={setConsistency} />

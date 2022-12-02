@@ -20,7 +20,7 @@ function ColorField({color, setColor, disabled = () => false}: ColorFieldProps) 
           : undefined
         }
       >
-        <option value="na">Not Applicable (dry/couldn't pick up)</option>
+        <option value="na">Not Applicable (Couldn't pick up)</option>
         <option value="clear">Clear</option>
         <option value="cloudy-white">Cloudy White</option>
         <option value="cloudy-clear">Cloudy Clear</option>

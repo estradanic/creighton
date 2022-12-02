@@ -1,8 +1,9 @@
 import { Accessor } from "solid-js";
 import { Observation } from "../components/ExistingObservation";
+import { isMenstruation, isPeakMucus } from "./assertions";
 
 const abbreviation = (observation: Accessor<Observation>, observationsByDay: Accessor<Record<string, Observation[]>>) => {
-  const {menstruation, color, sensation, stretchability, consistency} = observation();
+  const {menstruation, color, sensation, stretchability, consistency, appearance} = observation();
   let abbreviation = ["", "", "", "", "", "", ""];
   if (menstruation === "very-light") {
     abbreviation[0] = "VL";
@@ -12,6 +13,8 @@ const abbreviation = (observation: Accessor<Observation>, observationsByDay: Acc
     abbreviation[0] = "M";
   } else if (menstruation === "heavy") {
     abbreviation[0] = "H";
+  } else if (menstruation === "very-heavy") {
+    abbreviation[0] = "VH";
   }
   if (color === "red") {
     abbreviation[1] = "R ";
@@ -20,17 +23,16 @@ const abbreviation = (observation: Accessor<Observation>, observationsByDay: Acc
   } else if (menstruation !== "none") {
     abbreviation[1] = " ";
   }
-
-  if (sensation === "dry" && consistency === "dry") {
+  if (sensation === "dry" && appearance === "dry") {
     abbreviation[2] = "0";
   }
-  if ((sensation === "dry" && (consistency === "damp" || consistency === "wet")) || (sensation === "smooth" && consistency === "dry")) {
+  if ((sensation === "dry" && (appearance === "damp" || appearance === "wet")) || (sensation === "smooth" && appearance === "dry")) {
     abbreviation[2] = "1";
   }
-  if ((consistency === "damp" || consistency === "wet") && sensation === "smooth") {
+  if ((appearance === "damp" || appearance === "wet") && sensation === "smooth") {
     abbreviation[2] = "2";
   }
-  if (consistency === "shiny") {
+  if (appearance === "shiny") {
     abbreviation[2] = "4";
   }
   if (stretchability === "sticky") {
@@ -39,16 +41,16 @@ const abbreviation = (observation: Accessor<Observation>, observationsByDay: Acc
   if (stretchability === "tacky") {
     abbreviation[2] = "8";
   }
-  if (stretchability === "stretchy") {
+  if (isPeakMucus(observation()) && !isMenstruation(observation())) {
     abbreviation[2] = "10";
   }
-  if (consistency === "damp") {
+  if (appearance === "damp") {
     abbreviation[3] = "D";
   }
-  if (consistency === "wet") {
+  if (appearance === "wet") {
     abbreviation[3] = "W";
   }
-  if (consistency === "shiny") {
+  if (appearance === "shiny") {
     abbreviation[3] = "S";
   }
   if (color === "brown") {
@@ -76,7 +78,6 @@ const abbreviation = (observation: Accessor<Observation>, observationsByDay: Acc
     abbreviation[5] = "P";
   }
   if (sensation === "lubricative") {
-    abbreviation[2] = "10";
     abbreviation[6] = "L";
   }
   return abbreviation.join("");

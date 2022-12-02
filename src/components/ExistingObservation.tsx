@@ -12,6 +12,7 @@ import stamp from "../functions/stamp";
 import abbreviation from "../functions/abbreviation";
 import cycleDay from "../functions/cycleDay";
 import byDay from "../functions/byDay";
+import AppearanceField, { AppearanceFieldProps } from "./AppearanceField";
 
 export type Observation = {
   id: string;
@@ -22,6 +23,7 @@ export type Observation = {
   datetime: string;
   notes: NotesFieldProps["notes"];
   menstruation: MenstruationFieldProps["menstruation"];
+  appearance: AppearanceFieldProps["appearance"];
 }
 
 export type ExistingObservationProps = Observation & {
@@ -37,6 +39,7 @@ function ExistingObservation({
   datetime,
   notes,
   menstruation,
+  appearance,
   observations,
 }: ExistingObservationProps) {
   const [disabled, setDisabled] = createSignal(true);
@@ -51,6 +54,7 @@ function ExistingObservation({
       datetime,
       notes,
       menstruation,
+      appearance,
     };
   };
 
@@ -73,6 +77,7 @@ function ExistingObservation({
         <input type="hidden" name="id" value={id} />
         <MenstruationField disabled={disabled} menstruation={menstruation} />
         <SensationField disabled={disabled} sensation={sensation} />
+        <AppearanceField disabled={disabled} appearance={appearance} />
         <ColorField disabled={disabled} color={color} />
         <StretchabilityField disabled={disabled} stretchability={stretchability} />
         <ConsistencyField disabled={disabled} consistency={consistency} />

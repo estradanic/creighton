@@ -1,7 +1,7 @@
 import { Accessor } from "solid-js";
 
 export type ConsistencyFieldProps = {
-  consistency?: "dry" | "damp" | "shiny" | "wet" | "pasty" | "gummy";
+  consistency?: "na" | "stringy" | "pasty" | "gummy";
   setConsistency?: (consistency: ConsistencyFieldProps["consistency"]) => void;
   disabled?: Accessor<boolean>;
 }
@@ -20,10 +20,8 @@ function ConsistencyField({consistency, setConsistency, disabled = () => false}:
           : undefined
         }
       >
-        <option value="dry">Dry</option>
-        <option value="damp">Damp</option>
-        <option value="shiny">Shiny</option>
-        <option value="wet">Wet</option>
+        <option value="na">Not Applicable (Couldn't pick up)</option>
+        <option value="stringy">Stringy (Stretched into a thin thread)</option>
         <option value="pasty">Pasty (Creamy)</option>
         <option value="gummy">Gummy (Gluey)</option>
       </select>
