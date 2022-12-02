@@ -60,6 +60,29 @@
   background-position: center;
   background-size: contain;
   background-repeat: no-repeat;
+  position: relative;
+}
+
+.green-baby::after {
+  color: white;
+  font-size: large;
+  margin: 0;
+  margin-right: 0;
+  position: absolute;
+  left: 0;
+  right: 0;
+}
+
+.p-plus-one::after {
+  content: "1";
+}
+
+.p-plus-two::after {
+  content: "2";
+}
+
+.p-plus-three::after {
+  content: "3";
 }
 
 .white {

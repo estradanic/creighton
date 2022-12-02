@@ -27,11 +27,11 @@ function App() {
     <>
       <h1>Creighton Observation Tracker</h1>
       <h2>Today's highlight color: <span class={`highlight-color ${DateTime.now().weekdayLong}`}>{DateTime.now().weekdayLong}</span></h2>
-      <NewObservation id={nextIndex} />
+      <NewObservation observations={observations} id={nextIndex} />
       <For
         each={observations().sort((a, b) => b.datetime.localeCompare(a.datetime))}
         fallback={<h2>No observations yet.</h2>}
-        children={(observation, index) => <ExistingObservation index={index} observations={observations} {...observation} />}
+        children={(observation, index) => <ExistingObservation observations={observations} {...observation} />}
       />
     </>
   );

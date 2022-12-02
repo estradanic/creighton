@@ -3,7 +3,7 @@ import { Accessor } from "solid-js";
 
 export type DatetimeFieldProps = {
   datetime: DateTime;
-  setDatetime: (datetime: DateTime) => void;
+  setDatetime: (datetime: DatetimeFieldProps["datetime"]) => void;
   disabled?: Accessor<boolean>;
 };
 

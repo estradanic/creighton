@@ -8,6 +8,10 @@ import StretchabilityField, { StretchabilityFieldProps } from "./StretchabilityF
 import Submit from "./Submit";
 import ConsistencyField, { ConsistencyFieldProps } from "./ConsistencyField";
 import MenstruationField, { MenstruationFieldProps } from "./MenstruationField";
+import stamp from "../functions/stamp";
+import abbreviation from "../functions/abbreviation";
+import cycleDay from "../functions/cycleDay";
+import byDay from "../functions/byDay";
 
 export type Observation = {
   id: string;
@@ -24,25 +28,6 @@ export type ExistingObservationProps = Observation & {
   observations: Accessor<Observation[]>;
 }
 
-const isPeakMucus = ({sensation, stretchability, color, consistency}: Pick<Observation, "sensation" | "stretchability" | "color" | "consistency">): boolean => {
-  return sensation === "lubricative"
-    || stretchability === "stretchy"
-    || (color === "clear" && consistency !== "dry" && sensation !== "dry");
-};
-
-const isFertile = ({sensation, stretchability, color, consistency}: Pick<Observation, "sensation" | "stretchability" | "color" | "consistency">): boolean => {
-  return isPeakMucus({sensation, stretchability, color, consistency})
-    || (
-      sensation === "smooth"
-      && stretchability === "tacky"
-      && (consistency === "pasty" || consistency === "gummy")
-    );
-};
-
-const isMenstruation = ({menstruation}: Pick<Observation, "menstruation">): boolean => {
-  return menstruation !== "none";
-}
-
 function ExistingObservation({
   id,
   sensation,
@@ -55,134 +40,27 @@ function ExistingObservation({
   observations,
 }: ExistingObservationProps) {
   const [disabled, setDisabled] = createSignal(true);
-  const observationsByDay = createMemo(() => {
-    const observationsByDay: Record<string, Observation[]> = {};
-    for (const observation of observations()) {
-      const day = DateTime.fromISO(observation.datetime).toISODate();
-      if (!observationsByDay[day]) {
-        observationsByDay[day] = [];
-      }
-      observationsByDay[day].push(observation);
-    }
-    for (const day of Object.keys(observationsByDay)) {
-      const nextDay = DateTime.fromISO(day).plus({days: 1}).toISODate();
-      if (!observationsByDay[nextDay]) {
-        observationsByDay[nextDay] = [];
-      }
-    }
-    return observationsByDay;
-  });
-  const abbreviation = createMemo(() => {
-    let abbreviation = ["", "", "", "", "", "", ""];
-    if (menstruation === "very-light") {
-      abbreviation[0] = "VL";
-    } else if (menstruation === "light") {
-      abbreviation[0] = "L";
-    } else if (menstruation === "medium") {
-      abbreviation[0] = "M";
-    } else if (menstruation === "heavy") {
-      abbreviation[0] = "H";
-    }
-    if (color === "red") {
-      abbreviation[1] = "R ";
-    } else if (color === "brown") {
-      abbreviation[1] = "B ";
-    }
 
-    if (sensation === "dry" && consistency === "dry") {
-      abbreviation[2] = "0";
-    }
-    if ((sensation === "dry" && (consistency === "damp" || consistency === "wet")) || (sensation === "smooth" && consistency === "dry")) {
-      abbreviation[2] = "1";
-    }
-    if ((consistency === "damp" || consistency === "wet") && sensation === "smooth") {
-      abbreviation[2] = "2";
-    }
-    if (consistency === "shiny") {
-      abbreviation[2] = "4";
-    }
-    if (stretchability === "sticky") {
-      abbreviation[2] = "6";
-    }
-    if (stretchability === "tacky") {
-      abbreviation[2] = "8";
-    }
-    if (stretchability === "stretchy") {
-      abbreviation[2] = "10";
-    }
-    if (consistency === "damp") {
-      abbreviation[3] = "D";
-    }
-    if (consistency === "wet") {
-      abbreviation[3] = "W";
-    }
-    if (consistency === "shiny") {
-      abbreviation[3] = "S";
-    }
-    if (color === "brown") {
-      abbreviation[4] = "B";
-    }
-    if (color === "cloudy-white") {
-      abbreviation[4] = "C";
-    }
-    if (color === "cloudy-clear") {
-      abbreviation[4] = "C/K";
-    }
-    if (color === "clear") {
-      abbreviation[4] = "K";
-    }
-    if (color === "yellow") {
-      abbreviation[4] = "Y";
-    }
-    if (color === "red") {
-      abbreviation[4] = "R";
-    }
-    if (consistency === "gummy") {
-      abbreviation[5] = "G";
-    }
-    if (consistency === "pasty") {
-      abbreviation[5] = "P";
-    }
-    if (sensation === "lubricative") {
-      abbreviation[6] = "L";
-    }
-    return abbreviation.join("");
-  });
-  const stamp = createMemo(() => {
-    const dateTime = DateTime.fromISO(datetime);
-    const dayBefore = dateTime.minus({days: 1}).toISODate();
-    const secondDayBefore = dateTime.minus({days: 2}).toISODate();
-    const thirdDayBefore = dateTime.minus({days: 3}).toISODate();
-    if (isMenstruation({menstruation})) {
-      return "red";
-    }
-    if (isFertile({sensation, stretchability, color, consistency})) {
-      return "white";
-    }
-    for (const observation of observationsByDay()[dayBefore] ?? []) {
-      if (isFertile(observation)) {
-        return "green-baby";
-      }
-    }
-    for (const observation of observationsByDay()[secondDayBefore] ?? []) {
-      if (isFertile(observation)) {
-        return "green-baby";
-      }
-    }
-    for (const observation of observationsByDay()[thirdDayBefore] ?? []) {
-      if (isFertile(observation)) {
-        return "green-baby";
-      }
-    }
-    return "green";
-  });
+  const thisObservation = () => {
+    return {
+      id,
+      sensation,
+      color,
+      stretchability,
+      consistency,
+      datetime,
+      notes,
+      menstruation,
+    };
+  };
 
   return (
     <div class={`observation ${DateTime.fromISO(datetime).weekdayLong}`}>
+      <h3>Cycle Day: {cycleDay(thisObservation, () => byDay(observations))}</h3>
       <h3>{DateTime.fromISO(datetime).toFormat("EEEE MMM dd, yyyy @ t")}</h3>
       <h3>
-        <span class={`stamp ${stamp()}`}>&nbsp;&nbsp;&nbsp;</span>
-        {abbreviation()}
+        <span class={`stamp ${stamp(thisObservation, () => byDay(observations))}`}>&nbsp;&nbsp;&nbsp;</span>
+        {abbreviation(thisObservation, () => byDay(observations))}
         {(!menstruation || !sensation || !color || !stretchability || !consistency) &&
           <span class="incomplete">Incomplete</span>
         }
