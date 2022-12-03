@@ -1,3 +1,4 @@
+import Parse from "parse";
 import {Accessor, createSignal} from "solid-js";
 import {DateTime} from "luxon";
 import SensationField, { SensationFieldProps } from "./SensationField";
@@ -58,7 +59,8 @@ function NewObservation({observations}: NewObservationProps) {
           <span class="incomplete">Incomplete</span>
         }
       </h3>
-      <form onSubmit={async () => {
+      <form onSubmit={async (e) => {
+        e.preventDefault();
         try {
           const observation = new Parse.Object("observation");
           observation.set({
@@ -66,7 +68,7 @@ function NewObservation({observations}: NewObservationProps) {
             color: color(),
             stretchability: stretchability(),
             consistency: consistency(),
-            datetime: datetime(),
+            datetime: datetime().toISO(),
             menstruation: menstruation(),
             appearance: appearance(),
             yellowOverride: yellowOverride(),
