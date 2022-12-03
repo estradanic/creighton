@@ -4,7 +4,7 @@ export const isPeakMucus = ({sensation, stretchability, color, menstruation}: Pi
   return sensation === "lubricative"
     || stretchability === "stretchy"
     || (color === "clear" && stretchability !== "none")
-    || isMenstruation({menstruation});
+    || (!isMenstruation({menstruation}) && (color === "red" || color === "brown"));
 };
 
 export const isFertile = ({sensation, stretchability, color, consistency, menstruation}: Pick<Observation, "sensation" | "stretchability" | "color" | "consistency" | "menstruation">): boolean => {

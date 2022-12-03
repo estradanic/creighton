@@ -15,7 +15,10 @@ const abbreviation = (observation: Accessor<Observation>, observationsByDay: Acc
     abbreviation[0] = "H";
   } else if (menstruation === "very-heavy") {
     abbreviation[0] = "VH";
+  } else if (color === "red" || color === "brown") {
+    abbreviation[0] = "VL";
   }
+
   if (color === "red") {
     abbreviation[1] = "R ";
   } else if (color === "brown") {
