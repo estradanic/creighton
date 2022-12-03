@@ -4,7 +4,7 @@ import { Observation } from "../components/ExistingObservation";
 import { isMenstruation, isFertile, isPeakMucus } from "./assertions";
 
 const stamp = (observation: Accessor<Observation>, observationsByDay: Accessor<Record<string, Observation[]>>) => {
-  let stamp = undefined;
+  let stamp: string = "";
   const dateTime = DateTime.fromISO(observation().datetime);
   const dayBefore = dateTime.minus({days: 1}).toISODate();
   const secondDayBefore = dateTime.minus({days: 2}).toISODate();
@@ -28,21 +28,25 @@ const stamp = (observation: Accessor<Observation>, observationsByDay: Accessor<R
         }
       }
     }
-    for (const curObservation of observationsByDay()[secondDayBefore] ?? []) {
-      if (isPeakMucus(curObservation)) {
-        if (stamp === "green") {
-          stamp = "green-baby p-plus-two p-plus";
-        } else {
-          stamp += " p-plus-two p-plus";
+    if (!stamp.includes("p-plus-one")) {
+      for (const curObservation of observationsByDay()[secondDayBefore] ?? []) {
+        if (isPeakMucus(curObservation)) {
+          if (stamp === "green") {
+            stamp = "green-baby p-plus-two p-plus";
+          } else {
+            stamp += " p-plus-two p-plus";
+          }
         }
       }
     }
-    for (const curObservation of observationsByDay()[thirdDayBefore] ?? []) {
-      if (isPeakMucus(curObservation)) {
-        if (stamp === "green") {
-          stamp = "green-baby p-plus-three p-plus";
-        } else {
-          stamp += " p-plus-three p-plus";
+    if (!stamp.includes("p-plus-one") && !stamp.includes("p-plus-two")) {
+      for (const curObservation of observationsByDay()[thirdDayBefore] ?? []) {
+        if (isPeakMucus(curObservation)) {
+          if (stamp === "green") {
+            stamp = "green-baby p-plus-three p-plus";
+          } else {
+            stamp += " p-plus-three p-plus";
+          }
         }
       }
     }

@@ -55,7 +55,7 @@ function NewObservation({id, observations}: NewObservationProps) {
       <h3>
         <span class={`stamp ${stamp(thisObservation, () => byDay(observations))}`}>&nbsp;&nbsp;&nbsp;</span>
         {abbreviation(thisObservation, () => byDay(observations))}
-        {(!menstruation || !sensation || !color || !stretchability || !consistency) &&
+        {(!menstruation() || !sensation() || !color() || !stretchability() || !consistency()) &&
           <span class="incomplete">Incomplete</span>
         }
       </h3>

@@ -34,42 +34,50 @@ export type ExistingObservationProps = Observation & {
 
 function ExistingObservation({
   id,
-  sensation,
-  color,
-  stretchability,
-  consistency,
-  datetime,
+  sensation: initialSensation,
+  color: initialColor,
+  stretchability: initialStretchability,
+  consistency: initialConsistency,
+  datetime: initialDatetime,
   notes,
-  menstruation,
-  appearance,
-  yellowOverride,
+  menstruation: initialMenstruation,
+  appearance: initialAppearance,
+  yellowOverride: initialYellowOverride,
   observations,
 }: ExistingObservationProps) {
   const [disabled, setDisabled] = createSignal(true);
+  const [datetime, setDatetime] = createSignal(DateTime.fromISO(initialDatetime));
+  const [menstruation, setMenstruation] = createSignal<MenstruationFieldProps["menstruation"]>(initialMenstruation);
+  const [color, setColor] = createSignal<ColorFieldProps["color"]>(initialColor);
+  const [consistency, setConsistency] = createSignal<ConsistencyFieldProps["consistency"]>(initialConsistency);
+  const [appearance, setAppearance] = createSignal<AppearanceFieldProps["appearance"]>(initialAppearance);
+  const [sensation, setSensation] = createSignal<SensationFieldProps["sensation"]>(initialSensation);
+  const [stretchability, setStretchability] = createSignal<StretchabilityFieldProps["stretchability"]>(initialStretchability);
+  const [yellowOverride, setYellowOverride] = createSignal<YellowOverrideFieldProps["yellowOverride"]>(initialYellowOverride);
 
   const thisObservation = () => {
     return {
       id,
-      sensation,
-      color,
-      stretchability,
-      consistency,
-      datetime,
+      sensation: sensation(),
+      color: color(),
+      stretchability: stretchability(),
+      consistency: consistency(),
+      datetime: datetime().toISO(),
       notes,
-      menstruation,
-      appearance,
-      yellowOverride,
+      menstruation: menstruation(),
+      appearance: appearance(),
+      yellowOverride: yellowOverride(),
     };
   };
 
   return (
-    <div class={`observation ${DateTime.fromISO(datetime).weekdayLong}`}>
+    <div class={`observation ${datetime().weekdayLong}`}>
       <h3>Cycle Day: {cycleDay(thisObservation, () => byDay(observations))}</h3>
-      <h3>{DateTime.fromISO(datetime).toFormat("EEEE MMM dd, yyyy @ t")}</h3>
+      <h3>{datetime().toFormat("EEEE MMM dd, yyyy @ t")}</h3>
       <h3>
         <span class={`stamp ${stamp(thisObservation, () => byDay(observations))}`}>&nbsp;&nbsp;&nbsp;</span>
         {abbreviation(thisObservation, () => byDay(observations))}
-        {(!menstruation || !sensation || !color || !stretchability || !consistency) &&
+        {(!menstruation() || !sensation() || !color() || !stretchability() || !consistency()) &&
           <span class="incomplete">Incomplete</span>
         }
       </h3>
@@ -79,14 +87,14 @@ function ExistingObservation({
       </div>
       <form method="post" action="existing-observation">
         <input type="hidden" name="id" value={id} />
-        <MenstruationField disabled={disabled} menstruation={menstruation} />
-        <SensationField disabled={disabled} sensation={sensation} />
-        <AppearanceField disabled={disabled} appearance={appearance} />
-        <ColorField disabled={disabled} color={color} />
-        <StretchabilityField disabled={disabled} stretchability={stretchability} />
-        <ConsistencyField disabled={disabled} consistency={consistency} />
-        <DatetimeField disabled={disabled} datetime={DateTime.fromISO(datetime)} setDatetime={() => console.log("uh oh")} />
-        <YellowOverrideField disabled={disabled} yellowOverride={yellowOverride} />
+        <MenstruationField disabled={disabled} menstruation={menstruation()} setMenstruation={setMenstruation} />
+        <SensationField disabled={disabled} sensation={sensation()} setSensation={setSensation} />
+        <AppearanceField disabled={disabled} appearance={appearance()} setAppearance={setAppearance} />
+        <ColorField disabled={disabled} color={color()} setColor={setColor} />
+        <StretchabilityField disabled={disabled} stretchability={stretchability()} setStretchability={setStretchability} />
+        <ConsistencyField disabled={disabled} consistency={consistency()} setConsistency={setConsistency} />
+        <DatetimeField disabled={disabled} datetime={datetime()} setDatetime={setDatetime} />
+        <YellowOverrideField disabled={disabled} yellowOverride={yellowOverride()} setYellowOverride={setYellowOverride} />
         <NotesField disabled={disabled} notes={notes} />
         <Submit disabled={disabled} />
       </form>
