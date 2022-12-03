@@ -17,11 +17,10 @@ import AppearanceField, { AppearanceFieldProps } from "./AppearanceField";
 import YellowOverrideField, { YellowOverrideFieldProps } from "./YellowOverrideField";
 
 export type NewObservationProps = {
-  id: Accessor<string>;
   observations: Accessor<Observation[]>;
 };
 
-function NewObservation({id, observations}: NewObservationProps) {
+function NewObservation({observations}: NewObservationProps) {
   const [datetime, setDatetime] = createSignal(DateTime.now());
   const [menstruation, setMenstruation] = createSignal<MenstruationFieldProps["menstruation"]>("none");
   const [color, setColor] = createSignal<ColorFieldProps["color"]>("na");
@@ -33,7 +32,7 @@ function NewObservation({id, observations}: NewObservationProps) {
 
   const thisObservation = () => {
     return {
-      id: id(),
+      id: "",
       sensation: sensation(),
       color: color(),
       stretchability: stretchability(),
@@ -59,8 +58,26 @@ function NewObservation({id, observations}: NewObservationProps) {
           <span class="incomplete">Incomplete</span>
         }
       </h3>
-      <form method="post" action="new-observation">
-        <input type="hidden" name="id" value={id()} />
+      <form onSubmit={async () => {
+        try {
+          const observation = new Parse.Object("observation");
+          observation.set({
+            sensation: sensation(),
+            color: color(),
+            stretchability: stretchability(),
+            consistency: consistency(),
+            datetime: datetime(),
+            menstruation: menstruation(),
+            appearance: appearance(),
+            yellowOverride: yellowOverride(),
+            notes: "",
+          });
+          await observation.save();
+          window.location.reload();
+        } catch (e) {
+          console.error(e);
+        }
+      }}>
         <MenstruationField menstruation={menstruation()} setMenstruation={setMenstruation} />
         <SensationField sensation={sensation()} setSensation={setSensation} />
         <AppearanceField appearance={appearance()} setAppearance={setAppearance} />

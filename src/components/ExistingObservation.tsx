@@ -1,4 +1,5 @@
-import {Accessor, createMemo, createSignal} from "solid-js";
+import Parse from "parse";
+import {Accessor, createSignal} from "solid-js";
 import {DateTime} from "luxon";
 import ColorField, { ColorFieldProps } from "./ColorField";
 import DatetimeField from "./DatetimeField";
@@ -85,8 +86,25 @@ function ExistingObservation({
         <input type="button" disabled={!disabled()} onClick={() => setDisabled(false)} value="Edit" />
         <input type="button" disabled={disabled()} onClick={() => setDisabled(true)} value="Cancel" />
       </div>
-      <form method="post" action="existing-observation">
-        <input type="hidden" name="id" value={id} />
+      <form onSubmit={async (e) => {
+        e.preventDefault();
+        try {
+          await (await new Parse.Query("observation").get(id)).save({
+            sensation: sensation(),
+            color: color(),
+            stretchability: stretchability(),
+            consistency: consistency(),
+            datetime: datetime().toISO(),
+            notes: notes,
+            menstruation: menstruation(),
+            appearance: appearance(),
+            yellowOverride: yellowOverride(),
+          });
+          setDisabled(true);
+        } catch (e) {
+          console.error(e);
+        }
+      }}>
         <MenstruationField disabled={disabled} menstruation={menstruation()} setMenstruation={setMenstruation} />
         <SensationField disabled={disabled} sensation={sensation()} setSensation={setSensation} />
         <AppearanceField disabled={disabled} appearance={appearance()} setAppearance={setAppearance} />
@@ -98,8 +116,15 @@ function ExistingObservation({
         <NotesField disabled={disabled} notes={notes} />
         <Submit disabled={disabled} />
       </form>
-      <form method="post" action="delete-observation">
-        <input type="hidden" name="id" value={id} />
+      <form onSubmit={async (e) => {
+        e.preventDefault();
+        try {
+          await (await new Parse.Query("observation").get(id)).destroy();
+          window.location.reload();
+        } catch (e) {
+          console.error(e);
+        }
+      }}>
         <label for="delete"></label>
         <input type="submit" value="Delete" class="delete" disabled={disabled()} />
       </form>

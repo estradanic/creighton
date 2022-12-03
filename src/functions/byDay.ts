@@ -4,7 +4,8 @@ import { Observation } from "../components/ExistingObservation";
 
 const byDay = (observations: Accessor<Observation[]>) => {
   const observationsByDay: Record<string, Observation[]> = {};
-  for (const observation of observations()) {
+  const _observations = observations();
+  for (const observation of _observations) {
     const day = DateTime.fromISO(observation.datetime).toISODate();
     if (!observationsByDay[day]) {
       observationsByDay[day] = [];
