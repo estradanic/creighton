@@ -13,6 +13,7 @@ import abbreviation from "../functions/abbreviation";
 import cycleDay from "../functions/cycleDay";
 import byDay from "../functions/byDay";
 import AppearanceField, { AppearanceFieldProps } from "./AppearanceField";
+import YellowOverrideField, { YellowOverrideFieldProps } from "./YellowOverrideField";
 
 export type Observation = {
   id: string;
@@ -24,6 +25,7 @@ export type Observation = {
   notes: NotesFieldProps["notes"];
   menstruation: MenstruationFieldProps["menstruation"];
   appearance: AppearanceFieldProps["appearance"];
+  yellowOverride: YellowOverrideFieldProps["yellowOverride"];
 }
 
 export type ExistingObservationProps = Observation & {
@@ -40,6 +42,7 @@ function ExistingObservation({
   notes,
   menstruation,
   appearance,
+  yellowOverride,
   observations,
 }: ExistingObservationProps) {
   const [disabled, setDisabled] = createSignal(true);
@@ -55,6 +58,7 @@ function ExistingObservation({
       notes,
       menstruation,
       appearance,
+      yellowOverride,
     };
   };
 
@@ -82,6 +86,7 @@ function ExistingObservation({
         <StretchabilityField disabled={disabled} stretchability={stretchability} />
         <ConsistencyField disabled={disabled} consistency={consistency} />
         <DatetimeField disabled={disabled} datetime={DateTime.fromISO(datetime)} setDatetime={() => console.log("uh oh")} />
+        <YellowOverrideField disabled={disabled} yellowOverride={yellowOverride} />
         <NotesField disabled={disabled} notes={notes} />
         <Submit disabled={disabled} />
       </form>

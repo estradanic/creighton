@@ -9,7 +9,9 @@ const stamp = (observation: Accessor<Observation>, observationsByDay: Accessor<R
   const dayBefore = dateTime.minus({days: 1}).toISODate();
   const secondDayBefore = dateTime.minus({days: 2}).toISODate();
   const thirdDayBefore = dateTime.minus({days: 3}).toISODate();
-  if (isMenstruation(observation()) || observation().color === "red" || observation().color === "brown") {
+  if (observation().yellowOverride) {
+    stamp = "yellow";
+  } else if (isMenstruation(observation()) || observation().color === "red" || observation().color === "brown") {
     stamp = "red";
   } else if (isFertile(observation())) {
     stamp = "white";

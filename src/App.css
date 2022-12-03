@@ -7,7 +7,6 @@
   -webkit-text-size-adjust: 100%;
 }
 
-
 #root {
   margin: 0 auto;
   padding: 2rem;
@@ -40,6 +39,10 @@
 
 .green {
   background-color: green;
+}
+
+.yellow {
+  background-color: yellow;
 }
 
 .delete {
@@ -145,6 +148,11 @@ h1,h2,h3 {
 
 input[type="button"] {
   margin: 0.25rem;
+}
+
+input[type="checkbox"] {
+  margin-left: 0.25rem;
+  margin-right: auto;
 }
 
 form {

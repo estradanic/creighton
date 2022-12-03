@@ -44,7 +44,7 @@ const abbreviation = (observation: Accessor<Observation>, observationsByDay: Acc
   if (stretchability === "tacky") {
     abbreviation[2] = "8";
   }
-  if (isPeakMucus(observation()) && !isMenstruation(observation())) {
+  if (isPeakMucus(observation())) {
     abbreviation[2] = "10";
   }
   if (appearance === "damp") {

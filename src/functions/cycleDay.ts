@@ -8,6 +8,7 @@ const cycleDay = (observation: Accessor<Observation>, observationsByDay: Accesso
   let backtrackedDays = 0;
   let foundMenstruation = false;
   while (true) {
+    let foundMenstruationInCurDay = false;
     const observations = observationsByDay()[curDateTime.toISODate()];
     if (observations === undefined) {
       return "??";
@@ -15,9 +16,11 @@ const cycleDay = (observation: Accessor<Observation>, observationsByDay: Accesso
     for (const observation of observations) {
       if (isMenstruation(observation)) {
         foundMenstruation = true;
-      } else if (foundMenstruation) {
-        return `${backtrackedDays}`;
+        foundMenstruationInCurDay = true;
       }
+    }
+    if (foundMenstruation && !foundMenstruationInCurDay) {
+      return `${backtrackedDays}`;
     }
     curDateTime = curDateTime.minus({days: 1});
     backtrackedDays++;

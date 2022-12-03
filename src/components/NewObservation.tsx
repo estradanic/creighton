@@ -8,12 +8,13 @@ import DatetimeField from "./DatetimeField";
 import NotesField from "./NotesField";
 import Submit from "./Submit";
 import MenstruationField, { MenstruationFieldProps } from "./MenstruationField";
-import cycleDay from "../functions/cycleDay";
 import abbreviation from "../functions/abbreviation";
 import byDay from "../functions/byDay";
+import cycleDay from "../functions/cycleDay";
 import stamp from "../functions/stamp";
 import { Observation } from "./ExistingObservation";
 import AppearanceField, { AppearanceFieldProps } from "./AppearanceField";
+import YellowOverrideField, { YellowOverrideFieldProps } from "./YellowOverrideField";
 
 export type NewObservationProps = {
   id: Accessor<string>;
@@ -28,6 +29,7 @@ function NewObservation({id, observations}: NewObservationProps) {
   const [appearance, setAppearance] = createSignal<AppearanceFieldProps["appearance"]>("dry");
   const [sensation, setSensation] = createSignal<SensationFieldProps["sensation"]>("dry");
   const [stretchability, setStretchability] = createSignal<StretchabilityFieldProps["stretchability"]>("none");
+  const [yellowOverride, setYellowOverride] = createSignal<YellowOverrideFieldProps["yellowOverride"]>(false);
 
   const thisObservation = () => {
     return {
@@ -39,6 +41,7 @@ function NewObservation({id, observations}: NewObservationProps) {
       datetime: datetime().toISO(),
       menstruation: menstruation(),
       appearance: appearance(),
+      yellowOverride: yellowOverride(),
       notes: "",
     };
   };
@@ -47,6 +50,8 @@ function NewObservation({id, observations}: NewObservationProps) {
   return (
     <div class="observation">
       <h3>New Observation</h3>
+      <h4>Cycle Day: {cycleDay(thisObservation, () => byDay(observations))}</h4>
+      <h4>{datetime().toFormat("EEEE MMM dd, yyyy @ t")}</h4>
       <h3>
         <span class={`stamp ${stamp(thisObservation, () => byDay(observations))}`}>&nbsp;&nbsp;&nbsp;</span>
         {abbreviation(thisObservation, () => byDay(observations))}
@@ -63,6 +68,7 @@ function NewObservation({id, observations}: NewObservationProps) {
         <StretchabilityField stretchability={stretchability()} setStretchability={setStretchability} />
         <ConsistencyField consistency={consistency()} setConsistency={setConsistency} />
         <DatetimeField datetime={datetime()} setDatetime={setDatetime} />
+        <YellowOverrideField yellowOverride={yellowOverride()} setYellowOverride={setYellowOverride} />
         <NotesField />
         <Submit />
       </form>
