@@ -1,6 +1,6 @@
 import { DateTime } from "luxon";
 import { Accessor } from "solid-js";
-import { Observation } from "../components/ExistingObservation";
+import { Observation } from '../types/ObservationTypes';
 import { isMenstruation } from "./assertions";
 
 const cycleDay = (observation: Accessor<Observation>, observationsByDay: Accessor<Record<string, Observation[]>>) => {

@@ -1,7 +1,8 @@
 import { Accessor } from "solid-js";
+import { Sensation } from '../types/ObservationTypes';
 
 export type SensationFieldProps = {
-  sensation?: "dry" | "smooth" | "lubricative";
+  sensation?: Sensation;
   setSensation?: (sensation: SensationFieldProps["sensation"]) => void;
   disabled?: Accessor<boolean>;
 }

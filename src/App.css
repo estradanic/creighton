@@ -78,6 +78,12 @@
   position: absolute;
   left: 0;
   right: 0;
+  top: 0;
+  bottom: 0;
+}
+
+.p-plus-large::after {
+  line-height: 1.5;
 }
 
 .p-plus-one::after {
@@ -179,6 +185,11 @@ form>input,form>select,form>textarea {
   flex-shrink: 1;
 }
 
-input[type="submit"]:not(:disabled),button:not(:disabled),input[type="button"]:not(:disabled) {
+input[type="submit"]:not(:disabled),
+button:not(:disabled),
+input[type="button"]:not(:disabled),
+input[type="datetime-local"]:not(:disabled),
+input[type="checkbox"]:not(:disabled),
+select:not(:disabled) {
   cursor: pointer;
 }

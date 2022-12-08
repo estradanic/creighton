@@ -1,33 +1,29 @@
 import Parse from "parse";
 import {Accessor, createSignal} from "solid-js";
 import {DateTime} from "luxon";
-import ColorField, { ColorFieldProps } from "./ColorField";
+import ColorField from "./ColorField";
 import DatetimeField from "./DatetimeField";
-import SensationField, { SensationFieldProps } from "./SensationField";
-import NotesField, { NotesFieldProps } from "./NotesField";
-import StretchabilityField, { StretchabilityFieldProps } from "./StretchabilityField";
+import SensationField from "./SensationField";
+import NotesField from "./NotesField";
+import StretchabilityField from "./StretchabilityField";
 import Submit from "./Submit";
-import ConsistencyField, { ConsistencyFieldProps } from "./ConsistencyField";
-import MenstruationField, { MenstruationFieldProps } from "./MenstruationField";
+import ConsistencyField from "./ConsistencyField";
+import MenstruationField from "./MenstruationField";
 import stamp from "../functions/stamp";
 import abbreviation from "../functions/abbreviation";
 import cycleDay from "../functions/cycleDay";
 import byDay from "../functions/byDay";
-import AppearanceField, { AppearanceFieldProps } from "./AppearanceField";
-import YellowOverrideField, { YellowOverrideFieldProps } from "./YellowOverrideField";
-
-export type Observation = {
-  id: string;
-  sensation: SensationFieldProps["sensation"];
-  color: ColorFieldProps["color"];
-  stretchability: StretchabilityFieldProps["stretchability"];
-  consistency: ConsistencyFieldProps["consistency"];
-  datetime: string;
-  notes: NotesFieldProps["notes"];
-  menstruation: MenstruationFieldProps["menstruation"];
-  appearance: AppearanceFieldProps["appearance"];
-  yellowOverride: YellowOverrideFieldProps["yellowOverride"];
-}
+import AppearanceField from "./AppearanceField";
+import YellowOverrideField from "./YellowOverrideField";
+import {
+  Appearance,
+  Color,
+  Consistency,
+  Menstruation,
+  Observation,
+  Sensation,
+  Stretchability
+} from '../types/ObservationTypes';
 
 export type ExistingObservationProps = Observation & {
   observations: Accessor<Observation[]>;
@@ -48,13 +44,13 @@ function ExistingObservation({
 }: ExistingObservationProps) {
   const [disabled, setDisabled] = createSignal(true);
   const [datetime, setDatetime] = createSignal(DateTime.fromISO(initialDatetime));
-  const [menstruation, setMenstruation] = createSignal<MenstruationFieldProps["menstruation"]>(initialMenstruation);
-  const [color, setColor] = createSignal<ColorFieldProps["color"]>(initialColor);
-  const [consistency, setConsistency] = createSignal<ConsistencyFieldProps["consistency"]>(initialConsistency);
-  const [appearance, setAppearance] = createSignal<AppearanceFieldProps["appearance"]>(initialAppearance);
-  const [sensation, setSensation] = createSignal<SensationFieldProps["sensation"]>(initialSensation);
-  const [stretchability, setStretchability] = createSignal<StretchabilityFieldProps["stretchability"]>(initialStretchability);
-  const [yellowOverride, setYellowOverride] = createSignal<YellowOverrideFieldProps["yellowOverride"]>(initialYellowOverride);
+  const [menstruation, setMenstruation] = createSignal<Menstruation>(initialMenstruation);
+  const [color, setColor] = createSignal<Color>(initialColor);
+  const [consistency, setConsistency] = createSignal<Consistency>(initialConsistency);
+  const [appearance, setAppearance] = createSignal<Appearance>(initialAppearance);
+  const [sensation, setSensation] = createSignal<Sensation>(initialSensation);
+  const [stretchability, setStretchability] = createSignal<Stretchability>(initialStretchability);
+  const [yellowOverride, setYellowOverride] = createSignal<boolean>(initialYellowOverride);
 
   const thisObservation = () => {
     return {
@@ -89,6 +85,7 @@ function ExistingObservation({
       <form onSubmit={async (e) => {
         e.preventDefault();
         try {
+          setDisabled(true);
           await (await new Parse.Query("observation").get(id)).save({
             sensation: sensation(),
             color: color(),
@@ -100,9 +97,10 @@ function ExistingObservation({
             appearance: appearance(),
             yellowOverride: yellowOverride(),
           });
-          setDisabled(true);
         } catch (e) {
           console.error(e);
+          alert(e?.message);
+          setDisabled(false);
         }
       }}>
         <MenstruationField disabled={disabled} menstruation={menstruation()} setMenstruation={setMenstruation} />
@@ -119,10 +117,13 @@ function ExistingObservation({
       <form onSubmit={async (e) => {
         e.preventDefault();
         try {
+          setDisabled(true);
           await (await new Parse.Query("observation").get(id)).destroy();
           window.location.reload();
         } catch (e) {
+          alert(e?.message);
           console.error(e);
+          setDisabled(false);
         }
       }}>
         <label for="delete"></label>

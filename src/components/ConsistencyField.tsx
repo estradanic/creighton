@@ -1,7 +1,8 @@
 import { Accessor } from "solid-js";
+import { Consistency } from '../types/ObservationTypes';
 
 export type ConsistencyFieldProps = {
-  consistency?: "na" | "stringy" | "pasty" | "gummy";
+  consistency?: Consistency;
   setConsistency?: (consistency: ConsistencyFieldProps["consistency"]) => void;
   disabled?: Accessor<boolean>;
 }

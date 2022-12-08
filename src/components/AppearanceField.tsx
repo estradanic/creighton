@@ -1,7 +1,8 @@
 import { Accessor } from "solid-js";
+import { Appearance } from '../types/ObservationTypes';
 
 export type AppearanceFieldProps = {
-  appearance?: "dry" | "damp" | "shiny" | "wet";
+  appearance?: Appearance;
   setAppearance?: (appearance: AppearanceFieldProps["appearance"]) => void;
   disabled?: Accessor<boolean>;
 }

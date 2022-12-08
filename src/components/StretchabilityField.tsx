@@ -1,7 +1,8 @@
 import { Accessor } from "solid-js";
+import { Stretchability } from '../types/ObservationTypes';
 
 export type StretchabilityFieldProps = {
-  stretchability?: "none" | "sticky" | "tacky" | "stretchy";
+  stretchability?: Stretchability;
   disabled?: Accessor<boolean>;
   setStretchability?: (stretchability: StretchabilityFieldProps["stretchability"]) => void;
 };

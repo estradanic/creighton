@@ -1,12 +1,14 @@
 import { createSignal, onMount, createMemo, For } from "solid-js";
 import { DateTime } from "luxon";
-import ExistingObservation, { Observation } from "../components/ExistingObservation";
+import ExistingObservation from "../components/ExistingObservation";
 import NewObservation from "../components/NewObservation";
 import infoForDay from "../functions/infoForDay";
 import Parse from "parse";
+import { Observation } from '../types/ObservationTypes';
 
 function Observations() {
   const [observations, setObservations] = createSignal<Observation[]>([]);
+  const [loading, setLoading] = createSignal<boolean>(true);
   onMount(async () => {
     try {
       const results = await new Parse.Query<Parse.Object<Observation>>("observation").findAll();
@@ -14,6 +16,7 @@ function Observations() {
     } catch (e) {
       console.error(e);
     }
+    setLoading(false);
   });
   const todaysInfo = createMemo(() => infoForDay(observations(), DateTime.now()));
   return (
@@ -32,7 +35,8 @@ function Observations() {
         <span class={`stamp ${todaysInfo().stamp}`}>&nbsp;&nbsp;&nbsp;</span>
         {todaysInfo().abbreviation}
       </h2>
-      <NewObservation observations={observations} />
+      {loading() && <h2>Loading...</h2>}
+      <NewObservation observations={observations} loading={loading} />
       <For
         each={observations().sort((a, b) => b.datetime.localeCompare(a.datetime))}
         fallback={<h2>No observations yet.</h2>}

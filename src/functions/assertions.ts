@@ -1,4 +1,4 @@
-import { Observation } from "../components/ExistingObservation";
+import { Observation } from '../types/ObservationTypes';
 
 export const isPeakMucus = ({sensation, stretchability, color, menstruation}: Pick<Observation, "sensation" | "stretchability" | "color" | "menstruation">): boolean => {
   return sensation === "lubricative"

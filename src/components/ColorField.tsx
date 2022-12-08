@@ -1,7 +1,8 @@
 import { Accessor } from "solid-js";
+import { Color } from '../types/ObservationTypes';
 
 export type ColorFieldProps = {
-  color?: "na" | "clear" | "cloudy-white" | "cloudy-clear" | "yellow" | "brown" | "red";
+  color?: Color;
   setColor?: (color: ColorFieldProps["color"]) => void;
   disabled?: Accessor<boolean>;
 }

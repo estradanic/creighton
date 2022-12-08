@@ -1,6 +1,6 @@
 import { Accessor } from "solid-js";
-import { Observation } from "../components/ExistingObservation";
-import { isMenstruation, isPeakMucus } from "./assertions";
+import { Observation } from '../types/ObservationTypes';
+import { isPeakMucus } from "./assertions";
 
 const abbreviation = (observation: Accessor<Observation>, observationsByDay: Accessor<Record<string, Observation[]>>) => {
   const {menstruation, color, sensation, stretchability, consistency, appearance} = observation();

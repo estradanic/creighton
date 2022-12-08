@@ -1,7 +1,8 @@
 import { Accessor } from "solid-js";
+import { Menstruation } from '../types/ObservationTypes';
 
 export type MenstruationFieldProps = {
-  menstruation?: "none" | "very-light" | "light" | "medium" | "heavy" | "very-heavy";
+  menstruation?: Menstruation;
   setMenstruation?: (menstruation: MenstruationFieldProps["menstruation"]) => void;
   disabled?: Accessor<boolean>;
 }

@@ -1,10 +1,10 @@
 import {DateTime} from "luxon";
-import { Observation } from "../components/ExistingObservation";
+import { Observation } from "../types/ObservationTypes";
 import stamp from "./stamp";
 import byDay from "./byDay";
 import abbreviation from "./abbreviation";
 import getCycleDay from "./cycleDay";
-import compareInfo from "./compareInfo";
+import compareObservations from './compareObservations';
 
 export type Info = {
   stamp: string;
@@ -30,14 +30,18 @@ function infoForDay(observations: Observation[], dateTime: DateTime): Info {
     };
   }
   const cycleDay = getCycleDay(() => observationsForDay[0], () => observationsByDay);
-  const infos = observationsForDay.map((observation) => ({
-    stamp: stamp(() => observation, () => observationsByDay),
-    abbreviation: abbreviation(() => observation, () => observationsByDay),
-  }));
+  const mostFertileObservation = observationsForDay.sort(compareObservations)[0];
+  let mostFertileStamp = stamp(() => mostFertileObservation, () => observationsByDay);
+  const mostFertileAbbreviation = abbreviation(() => mostFertileObservation, () => observationsByDay);
+
+  if (mostFertileStamp.includes("p-plus")) {
+    mostFertileStamp += " p-plus-large";
+  }
 
   return {
     cycleDay,
-    ...infos.sort(compareInfo)[0],
+    stamp: mostFertileStamp,
+    abbreviation: mostFertileAbbreviation,
   };
 }
 
