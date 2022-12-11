@@ -1,10 +1,10 @@
-import { Accessor } from "solid-js";
-import { Observation } from '../types/ObservationTypes';
+import { Observation } from "../types/ObservationTypes";
 import { isPeakMucus } from "./assertions";
 
-const abbreviation = (observation: Accessor<Observation>, observationsByDay: Accessor<Record<string, Observation[]>>) => {
-  const {menstruation, color, sensation, stretchability, consistency, appearance} = observation();
-  let abbreviation = ["", "", "", "", "", "", ""];
+/** Function to get the abbreviation for an observation */
+const abbreviation = (observation: Observation): string => {
+  const { menstruation, color, sensation, stretchability, consistency, appearance } = observation;
+  const abbreviation = ["", "", "", "", "", "", ""];
   if (menstruation === "very-light") {
     abbreviation[0] = "VL";
   } else if (menstruation === "light") {
@@ -29,7 +29,8 @@ const abbreviation = (observation: Accessor<Observation>, observationsByDay: Acc
   if (sensation === "dry" && appearance === "dry") {
     abbreviation[2] = "0";
   }
-  if ((sensation === "dry" && (appearance === "damp" || appearance === "wet")) || (sensation === "smooth" && appearance === "dry")) {
+  if ((sensation === "dry" && (appearance === "damp" || appearance === "wet")) ||
+      (sensation === "smooth" && appearance === "dry")) {
     abbreviation[2] = "1";
   }
   if ((appearance === "damp" || appearance === "wet") && sensation === "smooth") {
@@ -44,7 +45,7 @@ const abbreviation = (observation: Accessor<Observation>, observationsByDay: Acc
   if (stretchability === "tacky") {
     abbreviation[2] = "8";
   }
-  if (isPeakMucus(observation())) {
+  if (isPeakMucus(observation)) {
     abbreviation[2] = "10";
   }
   if (appearance === "damp") {

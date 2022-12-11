@@ -1,8 +1,9 @@
 import Parse from "parse";
-import {Routes, Route} from "@solidjs/router";
+import { Routes, Route } from "@solidjs/router";
 import "./App.css";
 import Login from "./views/Login";
 import Observations from "./views/Observations";
+import { JSX } from "solid-js";
 
 Parse.serverURL = "https://creighton.b4a.app";
 Parse.initialize(
@@ -10,7 +11,7 @@ Parse.initialize(
   "WpWOMB0WXQ1vGl3EnSNi657F88BL2ClLSPgJAmgN",
 );
 
-function App() {
+function App (): JSX.Element {
   return (
     <>
       <h1>Creighton Observation Tracker</h1>

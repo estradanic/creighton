@@ -1,22 +1,19 @@
-import { createSignal, onMount, createMemo, For } from "solid-js";
+import { createSignal, onMount, createMemo, For, JSX } from "solid-js";
 import { DateTime } from "luxon";
 import ExistingObservation from "../components/ExistingObservation";
 import NewObservation from "../components/NewObservation";
 import infoForDay from "../functions/infoForDay";
 import Parse from "parse";
-import { Observation } from '../types/ObservationTypes';
+import { Observation } from "../types/ObservationTypes";
 
-function Observations() {
+function Observations (): JSX.Element {
   const [observations, setObservations] = createSignal<Observation[]>([]);
   const [loading, setLoading] = createSignal<boolean>(true);
-  onMount(async () => {
-    try {
-      const results = await new Parse.Query<Parse.Object<Observation>>("observation").findAll();
-      setObservations(results.map((result) => ({...result.attributes, id: result.id})));
-    } catch (e) {
-      console.error(e);
-    }
-    setLoading(false);
+  onMount(() => {
+    new Parse.Query<Parse.Object<Observation>>("observation").findAll()
+      .then((results) => setObservations(results.map((result) => ({ ...result.attributes, id: result.id }))))
+      .catch((e) => console.error(e))
+      .finally(() => setLoading(false));
   });
   const todaysInfo = createMemo(() => infoForDay(observations(), DateTime.now()));
   return (
@@ -35,13 +32,26 @@ function Observations() {
         <span class={`stamp ${todaysInfo().stamp}`}>&nbsp;&nbsp;&nbsp;</span>
         {todaysInfo().abbreviation}
       </h2>
-      {loading() && <h2>Loading...</h2>}
-      <NewObservation observations={observations} loading={loading} />
-      <For
-        each={observations().sort((a, b) => b.datetime.localeCompare(a.datetime))}
-        fallback={<h2>No observations yet.</h2>}
-        children={(observation) => <ExistingObservation observations={observations} {...observation} />}
-      />
+      {
+        loading()
+          ? <div class='loading' />
+          : (
+              <>
+                <NewObservation setObservations={setObservations} observations={observations()} />
+                <For
+                  each={observations().sort((a, b) => b.datetime.localeCompare(a.datetime))}
+                  fallback={<h2>No observations yet.</h2>}
+                  children={(observation) => (
+                    <ExistingObservation
+                      setObservations={setObservations}
+                      observations={observations()}
+                      {...observation}
+                    />
+                  )}
+                />
+              </>
+            )
+      }
     </>
   );
 }

@@ -1,15 +1,15 @@
 import { DateTime } from "luxon";
-import { Accessor } from "solid-js";
-import { Observation } from '../types/ObservationTypes';
+import { Observation } from "../types/ObservationTypes";
 import { isMenstruation } from "./assertions";
 
-const cycleDay = (observation: Accessor<Observation>, observationsByDay: Accessor<Record<string, Observation[]>>) => {
-  let curDateTime = DateTime.fromISO(observation().datetime);
+/** Function to get the cycle day for an observation given the context of the observations by day */
+const cycleDay = (observation: Observation, observationsByDay: Record<string, Observation[]>): string => {
+  let curDateTime = DateTime.fromISO(observation.datetime);
   let backtrackedDays = 0;
   let foundMenstruation = false;
   while (true) {
     let foundMenstruationInCurDay = false;
-    const observations = observationsByDay()[curDateTime.toISODate()];
+    const observations = observationsByDay[curDateTime.toISODate()];
     if (observations === undefined) {
       return "??";
     }
@@ -22,10 +22,9 @@ const cycleDay = (observation: Accessor<Observation>, observationsByDay: Accesso
     if (foundMenstruation && !foundMenstruationInCurDay) {
       return `${backtrackedDays}`;
     }
-    curDateTime = curDateTime.minus({days: 1});
+    curDateTime = curDateTime.minus({ days: 1 });
     backtrackedDays++;
   }
 };
 
 export default cycleDay;
-

@@ -4,18 +4,28 @@ export type Sensation = "dry" | "smooth" | "lubricative";
 export type Color = "na" | "clear" | "cloudy-white" | "cloudy-clear" | "yellow" | "brown" | "red";
 export type Stretchability = "none" | "sticky" | "tacky" | "stretchy";
 export type Menstruation = "none" | "very-light" | "light" | "medium" | "heavy" | "very-heavy";
+export type Coverage = "na" | "blip" | "little" | "much" | "all";
 
 export type Observation = {
-  id: string;
-  sensation: Sensation;
-  color: Color;
-  stretchability: Stretchability;
-  consistency: Consistency;
-  datetime: string;
-  notes: string;
-  menstruation: Menstruation;
-  appearance: Appearance;
-  yellowOverride: boolean;
+  id: string
+  sensation: Sensation
+  color: Color
+  stretchability: Stretchability
+  consistency: Consistency
+  datetime: string
+  notes: string
+  menstruation: Menstruation
+  appearance: Appearance
+  yellowOverride: boolean
+  coverage: Coverage
+};
+
+export const CoverageHierarchy: Record<Coverage, number> = {
+  na: 0,
+  blip: 1,
+  little: 2,
+  much: 3,
+  all: 4,
 };
 
 export const AppearanceHierarchy: Record<Appearance, number> = {
@@ -28,8 +38,8 @@ export const AppearanceHierarchy: Record<Appearance, number> = {
 export const ConsistencyHierarchy: Record<Consistency, number> = {
   na: 0,
   gummy: 1,
-  pasty: 2,
-  stringy: 3,
+  pasty: 1,
+  stringy: 5,
 };
 
 export const SensationHierarchy: Record<Sensation, number> = {

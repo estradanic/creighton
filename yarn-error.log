@@ -1,5 +1,5 @@
 Arguments: 
-  /home/nic/.nvm/versions/node/v16.8.0/bin/node /home/nic/.yarn/bin/yarn.js add @parse/solid
+  /home/nic/.nvm/versions/node/v16.8.0/bin/node /home/nic/.yarn/bin/yarn.js add @eslint-plugin/solidjs
 
 PATH: 
   /home/nic/.nvm/versions/node/v16.8.0/bin:/home/nic/.yarn/bin:/home/nic/.config/yarn/global/node_modules/.bin:/home/nic/perl5/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/nic/.dotnet/tools:/opt/mssql-tools/bin:/opt/mssql-tools/bin
@@ -14,7 +14,7 @@ Platform:
   linux x64
 
 Trace: 
-  Error: https://registry.yarnpkg.com/@parse%2fsolid: Not found
+  Error: https://registry.yarnpkg.com/@eslint-plugin%2fsolidjs: Not found
       at Request.params.callback [as _callback] (/home/nic/.yarn/lib/cli.js:66145:18)
       at Request.self.callback (/home/nic/.yarn/lib/cli.js:140890:22)
       at Request.emit (node:events:394:28)
@@ -47,9 +47,11 @@ npm manifest:
     },
     "dependencies": {
       "@solidjs/router": "^0.5.1",
+      "events": "^3.3.0",
       "luxon": "^3.1.1",
       "parse": "3.4.4",
-      "solid-js": "^1.5.1"
+      "solid-js": "^1.5.1",
+      "typescript": "^4.9.4"
     }
   }
 
@@ -711,6 +713,11 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/escape-string-regexp/-/escape-string-regexp-1.0.5.tgz#1b61c0562190a8dff6ae3bb2cf0200ca130b86d4"
     integrity sha512-vbRorB5FUQWvla16U8R/qgaFIya2qGzwDrNmCZuYKrbdSUMG6I1ZCGQRefkRVhuOkIGVne7BQ35DSfo1qvJqFg==
   
+  events@^3.3.0:
+    version "3.3.0"
+    resolved "https://registry.yarnpkg.com/events/-/events-3.3.0.tgz#31a95ad0a924e2d2c419a813aeb2c4e878ea7400"
+    integrity sha512-mQw+2fkQbALzQ7V0MY0IqdnXNOeTtP4r0lN9z7AAawCXgqea7bDii20AYrIBrFd/Hx0M2Ocz6S111CaFkUcb0Q==
+  
   fsevents@~2.3.2:
     version "2.3.2"
     resolved "https://registry.yarnpkg.com/fsevents/-/fsevents-2.3.2.tgz#8a526f78b8fdf4623b709e0b975c52c24c02fd1a"
@@ -916,6 +923,11 @@ Lockfile:
     version "2.0.0"
     resolved "https://registry.yarnpkg.com/to-fast-properties/-/to-fast-properties-2.0.0.tgz#dc5e698cbd079265bc73e0377681a4e4e83f616e"
     integrity sha512-/OaKK0xYrs3DmxRYqL/yDc+FxFUVYhDlXMhRmv3z915w2HF1tnN1omB354j8VUGO/hbRzyD6Y3sA7v7GS/ceog==
+  
+  typescript@^4.9.4:
+    version "4.9.4"
+    resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.9.4.tgz#a2a3d2756c079abda241d75f149df9d561091e78"
+    integrity sha512-Uz+dTXYzxXXbsFpM86Wh3dKCxrQqUcVMxwU54orwlJjOpO3ao8L7j5lH+dWfTwgCwIuM9GQ2kvVotzYJMXTBZg==
   
   update-browserslist-db@^1.0.9:
     version "1.0.10"

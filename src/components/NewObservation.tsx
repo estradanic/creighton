@@ -1,36 +1,39 @@
 import Parse from "parse";
-import {Accessor, createEffect, createSignal} from "solid-js";
-import {DateTime} from "luxon";
-import SensationField from "./SensationField";
-import ColorField from "./ColorField";
-import StretchabilityField from "./StretchabilityField";
-import ConsistencyField from "./ConsistencyField";
-import DatetimeField from "./DatetimeField";
-import NotesField from "./NotesField";
-import Submit from "./Submit";
-import MenstruationField from "./MenstruationField";
+import { createMemo, createSignal, JSX, mergeProps, Setter } from "solid-js";
+import { DateTime } from "luxon";
+import SensationField from "./Fields/SensationField";
+import ColorField from "./Fields/ColorField";
+import StretchabilityField from "./Fields/StretchabilityField";
+import ConsistencyField from "./Fields/ConsistencyField";
+import DatetimeField from "./Fields/DatetimeField";
+import NotesField from "./Fields/NotesField";
+import Submit from "./Fields/Submit";
+import MenstruationField from "./Fields/MenstruationField";
 import abbreviation from "../functions/abbreviation";
 import byDay from "../functions/byDay";
 import cycleDay from "../functions/cycleDay";
 import stamp from "../functions/stamp";
-import AppearanceField from "./AppearanceField";
-import YellowOverrideField from "./YellowOverrideField";
+import AppearanceField from "./Fields/AppearanceField";
+import YellowOverrideField from "./Fields/YellowOverrideField";
 import {
   Appearance,
   Color,
   Consistency,
+  Coverage,
   Menstruation,
   Observation,
   Sensation,
-  Stretchability
-} from '../types/ObservationTypes';
+  Stretchability,
+} from "../types/ObservationTypes";
+import CoverageField from "./Fields/CoverageField";
 
 export type NewObservationProps = {
-  observations: Accessor<Observation[]>;
-  loading: Accessor<boolean>;
+  observations: Observation[]
+  setObservations: Setter<Observation[]>
 };
 
-function NewObservation({observations, loading}: NewObservationProps) {
+function NewObservation (_props: NewObservationProps): JSX.Element {
+  const props = mergeProps({ observations: [] }, _props);
   const [datetime, setDatetime] = createSignal(DateTime.now());
   const [menstruation, setMenstruation] = createSignal<Menstruation>("none");
   const [color, setColor] = createSignal<Color>("na");
@@ -39,19 +42,13 @@ function NewObservation({observations, loading}: NewObservationProps) {
   const [sensation, setSensation] = createSignal<Sensation>("dry");
   const [stretchability, setStretchability] = createSignal<Stretchability>("none");
   const [yellowOverride, setYellowOverride] = createSignal<boolean>(false);
-  const [disabled, setDisabled] = createSignal<boolean>(true);
+  const [notes, setNotes] = createSignal<string>("");
+  const [id, setId] = createSignal<string>("");
+  const [coverage, setCoverage] = createSignal<Coverage>("na");
 
-  createEffect(() => {
-    if (loading()) {
-      setDisabled(true);
-    } else {
-      setDisabled(false);
-    }
-  });
-
-  const thisObservation = () => {
+  const thisObservation = (): Observation => {
     return {
-      id: "",
+      id: id(),
       sensation: sensation(),
       color: color(),
       stretchability: stretchability(),
@@ -60,57 +57,89 @@ function NewObservation({observations, loading}: NewObservationProps) {
       menstruation: menstruation(),
       appearance: appearance(),
       yellowOverride: yellowOverride(),
-      notes: "",
+      notes: notes(),
+      coverage: coverage(),
     };
   };
 
+  const initialize = (): void => {
+    setDatetime(DateTime.now());
+    setMenstruation("none");
+    setColor("na");
+    setStretchability("none");
+    setConsistency("na");
+    setAppearance("dry");
+    setSensation("dry");
+    setYellowOverride(false);
+    setNotes("");
+    setId("");
+    setCoverage("na");
+  };
+
+  const observationsSet = (prev: Observation[]): Observation[] => [...prev, thisObservation()];
+
+  const save = (savedObservation: Parse.Object): void => {
+    setId(savedObservation.id);
+    props.setObservations(observationsSet);
+    initialize();
+  };
+
+  const onSubmit = (e: Event): void => {
+    e.preventDefault();
+    const observation = new Parse.Object("observation");
+    observation.set({
+      sensation: sensation(),
+      color: color(),
+      stretchability: stretchability(),
+      consistency: consistency(),
+      datetime: datetime().toISO(),
+      menstruation: menstruation(),
+      appearance: appearance(),
+      yellowOverride: yellowOverride(),
+      notes: notes(),
+      coverage: coverage(),
+    });
+    observation.save()
+      .then(save)
+      .catch((e) => {
+        alert(e?.message);
+        console.error(e);
+      });
+  };
+
+  const _byDay = createMemo(() => byDay(props.observations));
+  const _cycleDay = createMemo(() => cycleDay(thisObservation(), _byDay()));
+  const _stamp = createMemo(() => `stamp ${stamp(thisObservation(), _byDay())}`);
+  const _abbreviation = createMemo(() => abbreviation(thisObservation()));
+  const _submitDisabled = createMemo(() => !datetime().isValid);
 
   return (
     <div class="observation">
       <h3>New Observation</h3>
-      <h4>Cycle Day: {cycleDay(thisObservation, () => byDay(observations))}</h4>
+      <h4>Cycle Day: {_cycleDay()}</h4>
       <h4>{datetime().toFormat("EEEE MMM dd, yyyy @ t")}</h4>
       <h3>
-        <span class={`stamp ${stamp(thisObservation, () => byDay(observations))}`}>&nbsp;&nbsp;&nbsp;</span>
-        {abbreviation(thisObservation, () => byDay(observations))}
-        {(!menstruation() || !sensation() || !color() || !stretchability() || !consistency()) &&
-          <span class="incomplete">Incomplete</span>
-        }
+        <span class={_stamp()}>&nbsp;&nbsp;&nbsp;</span>
+        {_abbreviation()}
       </h3>
-      <form onSubmit={async (e) => {
-        e.preventDefault();
-        setDisabled(true);
-        try {
-          const observation = new Parse.Object("observation");
-          observation.set({
-            sensation: sensation(),
-            color: color(),
-            stretchability: stretchability(),
-            consistency: consistency(),
-            datetime: datetime().toISO(),
-            menstruation: menstruation(),
-            appearance: appearance(),
-            yellowOverride: yellowOverride(),
-            notes: "",
-          });
-          await observation.save();
-          window.location.reload();
-        } catch (e) {
-          alert(e?.message);
-          console.error(e);
-          setDisabled(false);
-        }
-      }}>
-        <MenstruationField menstruation={menstruation()} setMenstruation={setMenstruation} disabled={disabled} />
-        <SensationField sensation={sensation()} setSensation={setSensation} disabled={disabled} />
-        <AppearanceField appearance={appearance()} setAppearance={setAppearance} disabled={disabled} />
-        <ColorField color={color()} setColor={setColor} disabled={disabled} />
-        <StretchabilityField stretchability={stretchability()} setStretchability={setStretchability} disabled={disabled} />
-        <ConsistencyField consistency={consistency()} setConsistency={setConsistency} disabled={disabled} />
-        <DatetimeField datetime={datetime()} setDatetime={setDatetime} disabled={disabled} />
-        <YellowOverrideField yellowOverride={yellowOverride()} setYellowOverride={setYellowOverride} disabled={disabled} />
-        <NotesField disabled={disabled} />
-        <Submit disabled={disabled} />
+      <form onSubmit={onSubmit}>
+        <MenstruationField menstruation={menstruation()} setMenstruation={setMenstruation} />
+        <SensationField sensation={sensation()} setSensation={setSensation} />
+        <AppearanceField appearance={appearance()} setAppearance={setAppearance} />
+        <ColorField color={color()} setColor={setColor} />
+        <StretchabilityField
+          stretchability={stretchability()}
+          setStretchability={setStretchability}
+        />
+        <ConsistencyField consistency={consistency()} setConsistency={setConsistency} />
+        <DatetimeField datetime={datetime()} setDatetime={setDatetime} />
+        <CoverageField coverage={coverage()} setCoverage={setCoverage} />
+        <YellowOverrideField
+          yellowOverride={yellowOverride()}
+          setYellowOverride={setYellowOverride}
+        />
+        <NotesField notes={notes()} setNotes={setNotes} />
+        <Submit disabled={_submitDisabled()} />
       </form>
     </div>
 

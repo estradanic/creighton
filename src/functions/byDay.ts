@@ -1,11 +1,10 @@
 import { DateTime } from "luxon";
-import { Accessor } from "solid-js";
-import { Observation } from '../types/ObservationTypes';
+import { Observation } from "../types/ObservationTypes";
 
-const byDay = (observations: Accessor<Observation[]>) => {
+/** Function to take a flattened list of observations and group them by day */
+const byDay = (observations: Observation[]): Record<string, Observation[]> => {
   const observationsByDay: Record<string, Observation[]> = {};
-  const _observations = observations();
-  for (const observation of _observations) {
+  for (const observation of observations) {
     const day = DateTime.fromISO(observation.datetime).toISODate();
     if (!observationsByDay[day]) {
       observationsByDay[day] = [];
@@ -13,7 +12,7 @@ const byDay = (observations: Accessor<Observation[]>) => {
     observationsByDay[day].push(observation);
   }
   for (const day of Object.keys(observationsByDay)) {
-    const nextDay = DateTime.fromISO(day).plus({days: 1}).toISODate();
+    const nextDay = DateTime.fromISO(day).plus({ days: 1 }).toISODate();
     if (!observationsByDay[nextDay]) {
       observationsByDay[nextDay] = [];
     }

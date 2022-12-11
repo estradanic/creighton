@@ -1,0 +1,48 @@
+{
+    "env": {
+        "browser": true,
+        "es2021": true
+    },
+    "extends": ["standard-with-typescript", "plugin:solid/recommended"],
+    "plugins": ["solid"],
+    "parserOptions": {
+        "ecmaVersion": "latest",
+        "sourceType": "module",
+        "project": "./tsconfig.json"
+    },
+    "rules": {
+      "@typescript-eslint/consistent-type-definitions": "off",
+      "@typescript-eslint/quotes": [
+        "error",
+        "double"
+      ],
+      "@typescript-eslint/semi": [
+        "error",
+        "always"
+      ],
+      "@typescript-eslint/strict-boolean-expressions": "off",
+      "@typescript-eslint/comma-dangle": [
+        "error",
+        {
+          "arrays": "always-multiline",
+          "objects": "always-multiline",
+          "imports": "always-multiline",
+          "exports": "always-multiline",
+          "functions": "always-multiline",
+          "enums": "always-multiline",
+          "generics": "always-multiline",
+          "tuples": "always-multiline"
+        }
+      ],
+      "max-len": [
+        "error",
+        {
+          "code": 120,
+          "ignoreComments": false,
+          "ignoreStrings": false,
+          "ignoreTemplateLiterals": true,
+          "ignoreRegExpLiterals": true
+        }
+      ]
+    }
+}

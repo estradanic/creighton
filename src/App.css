@@ -49,11 +49,6 @@
   background-color: lightcoral;
 }
 
-.incomplete {
-  color: red;
-  margin-left: 1rem;
-}
-
 .submit {
   background-color: lightgreen;
 }
@@ -136,6 +131,36 @@
 
 .Saturday {
   background-color: lightgreen;
+}
+
+@keyframes spinner {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.loading {
+  position: relative;
+  width: 4rem;
+  height: 4rem;
+}
+
+.loading::before {
+  animation: 1.5s linear infinite spinner;
+  animation-play-state: inherit;
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-image: url("/assets/baby.png");
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
 }
 
 body {

@@ -6,27 +6,33 @@ import {
   SensationHierarchy,
   ColorHierarchy,
   MenstruationHierarchy,
-} from '../types/ObservationTypes';
+  CoverageHierarchy,
+} from "../types/ObservationTypes";
 import { isMenstruation, isPeakMucus } from "./assertions";
 
-function compareOnDetails(a: Observation, b: Observation): number {
-  const aTotal = MenstruationHierarchy[a.menstruation]
-    + AppearanceHierarchy[a.appearance]
-    + StretchabilityHierarchy[a.stretchability]
-    + ConsistencyHierarchy[a.consistency]
-    + SensationHierarchy[a.sensation]
-    + ColorHierarchy[a.color];
-  const bTotal = MenstruationHierarchy[b.menstruation]
-    + AppearanceHierarchy[b.appearance]
-    + StretchabilityHierarchy[b.stretchability]
-    + ConsistencyHierarchy[b.consistency]
-    + SensationHierarchy[b.sensation]
-    + ColorHierarchy[b.color];
+function compareOnDetails (a: Observation, b: Observation): number {
+  const aTotal = (MenstruationHierarchy[a.menstruation] ?? 0) +
+    (AppearanceHierarchy[a.appearance] ?? 0) +
+    (StretchabilityHierarchy[a.stretchability] ?? 0) +
+    (ConsistencyHierarchy[a.consistency] ?? 0) +
+    (SensationHierarchy[a.sensation] ?? 0) +
+    (ColorHierarchy[a.color] ?? 0) +
+    (CoverageHierarchy[a.coverage] ?? 0);
+  const bTotal = (MenstruationHierarchy[b.menstruation] ?? 0) +
+    (AppearanceHierarchy[b.appearance] ?? 0) +
+    (StretchabilityHierarchy[b.stretchability] ?? 0) +
+    (ConsistencyHierarchy[b.consistency] ?? 0) +
+    (SensationHierarchy[b.sensation] ?? 0) +
+    (ColorHierarchy[b.color] ?? 0) +
+    (CoverageHierarchy[b.coverage] ?? 0);
+
+  console.log({ a, aTotal, b, bTotal });
 
   return bTotal - aTotal;
 }
 
-function compareObservations(a: Observation, b: Observation): number {
+/** Function to compare observations by fertility */
+function compareObservations (a: Observation, b: Observation): number {
   if (a.yellowOverride === b.yellowOverride) {
     if ((isMenstruation(a) && isMenstruation(b)) || (!isMenstruation(a) && !isMenstruation(b))) {
       if ((isPeakMucus(a) && isPeakMucus(b)) || (!isPeakMucus(a) && !isPeakMucus(b))) {
@@ -46,6 +52,7 @@ function compareObservations(a: Observation, b: Observation): number {
   } else if (b.yellowOverride) {
     return 1;
   }
+  return compareOnDetails(a, b);
 }
 
 export default compareObservations;
