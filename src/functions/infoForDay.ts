@@ -16,7 +16,7 @@ export type Info = {
  * Function to get the most fertile stamp/abbreviation
  * and the cycle day for a set of observations on the same day
  */
-function infoForDay (observations: Observation[], dateTime: DateTime): Info {
+function infoForDay (observations: Observation[], dateTime: DateTime, large: boolean = true): Info {
   if (!observations || observations.length === 0) {
     return {
       stamp: "",
@@ -38,7 +38,7 @@ function infoForDay (observations: Observation[], dateTime: DateTime): Info {
   let mostFertileStamp = stamp(mostFertileObservation, observationsByDay);
   const mostFertileAbbreviation = abbreviation(mostFertileObservation);
 
-  if (mostFertileStamp.includes("p-plus")) {
+  if (mostFertileStamp.includes("p-plus") && large) {
     mostFertileStamp += " p-plus-large";
   }
 

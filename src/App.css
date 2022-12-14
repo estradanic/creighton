@@ -163,6 +163,33 @@
   background-repeat: no-repeat;
 }
 
+.chart-container {
+  overflow-x: scroll;
+  width: 100vw;
+}
+
+td>.stamp {
+  height: 2rem;
+  width: 1rem;
+  display: inline-block;
+}
+
+table, th, td {
+  border: 1px solid black;
+  background-color: lightcyan;
+}
+
+td {
+  width: max-content;
+  align-items: center;
+  text-align: center;
+  padding: 0.5rem;
+}
+
+a {
+  margin-bottom: 1rem;
+}
+
 body {
   background-color: whitesmoke;
 }

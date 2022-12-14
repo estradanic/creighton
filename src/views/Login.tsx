@@ -1,10 +1,7 @@
-import { createSignal, JSX, onMount } from "solid-js";
+import { createSignal, JSX } from "solid-js";
 import Parse from "parse";
 
 function Login (): JSX.Element {
-  onMount(() => {
-    if (Parse.User.current()) window.location.href = "/observations";
-  });
   const [password, setPassword] = createSignal("");
   return (
     <form

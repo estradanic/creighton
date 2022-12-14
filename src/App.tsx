@@ -1,9 +1,10 @@
-import Parse from "parse";
-import { Routes, Route } from "@solidjs/router";
 import "./App.css";
+import { JSX, onMount } from "solid-js";
+import { Routes, Route } from "@solidjs/router";
+import Parse from "parse";
 import Login from "./views/Login";
 import Observations from "./views/Observations";
-import { JSX } from "solid-js";
+import Chart from './views/Chart';
 
 Parse.serverURL = "https://creighton.b4a.app";
 Parse.initialize(
@@ -12,13 +13,21 @@ Parse.initialize(
 );
 
 function App (): JSX.Element {
+  onMount(() => {
+    if (Parse.User.current()) window.location.href = "/observations";
+    else window.location.href = "/login";
+  });
   return (
     <>
       <h1>Creighton Observation Tracker</h1>
+      <a href="/observations">Observations</a>
+      <span>&nbsp;|&nbsp;</span>
+      <a href="/chart">Chart</a>
       <Routes>
         <Route path="/" component={Login} />
         <Route path="/login" component={Login} />
         <Route path="/observations" component={Observations} />
+        <Route path="/chart" component={Chart} />
       </Routes>
     </>
   );
