@@ -168,10 +168,16 @@
   width: 100vw;
 }
 
+.link-container {
+  width: 100vw;
+  margin-bottom: 2rem;
+}
+
 td>.stamp {
   height: 2rem;
-  width: 1rem;
+  width: 1.5rem;
   display: inline-block;
+  margin: auto;
 }
 
 table, th, td {
@@ -184,10 +190,6 @@ td {
   align-items: center;
   text-align: center;
   padding: 0.5rem;
-}
-
-a {
-  margin-bottom: 1rem;
 }
 
 body {

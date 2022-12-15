@@ -1,13 +1,12 @@
 import Parse from "parse";
-import { createMemo, createSignal, For, Index, onMount } from 'solid-js';
-import { DateTime } from 'luxon';
-import byCycle from '../functions/byCycle';
-import byDay from '../functions/byDay';
-import infoForDay from '../functions/infoForDay';
-import { Observation } from '../types/ObservationTypes'
+import { createMemo, createSignal, For, Index, JSX, onMount } from "solid-js";
+import { DateTime } from "luxon";
+import byCycle from "../functions/byCycle";
+import byDay from "../functions/byDay";
+import infoForDay from "../functions/infoForDay";
+import { Observation } from "../types/ObservationTypes";
 
-
-function Chart () {
+function Chart (): JSX.Element {
   const [observations, setObservations] = createSignal<Observation[]>([]);
   const [loading, setLoading] = createSignal<boolean>(true);
   onMount(() => {
@@ -25,49 +24,51 @@ function Chart () {
         loading()
           ? <div class='loading' />
           : (
-            <div class="chart-container">
-              <table>
-                <thead>
-                  <tr>
-                    <Index
-                      each={new Array<number>(36).fill(0)}
-                      children={(_, index) => (
-                        <th>{index + 1}</th>
+              <div class="chart-container">
+                <table>
+                  <thead>
+                    <tr>
+                      <Index
+                        each={new Array<number>(36).fill(0)}
+                        children={(_, index) => (
+                          <th>{index + 1}</th>
+                        )}
+                      />
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <For
+                      each={_byCycle()}
+                      children={(cycle) => (
+                        <tr>
+                          <For
+                            each={Object.keys(cycle)}
+                            children={(day) => {
+                              const dayInfo = createMemo(() => infoForDay(observations(), DateTime.fromISO(day)));
+                              return (
+                                <td>
+                                  <span>{DateTime.fromISO(day).toFormat("MM/dd")}</span>
+                                  <br />
+                                  <span class={`stamp ${dayInfo().stamp}`}>&nbsp;&nbsp;&nbsp;</span>
+                                  <br />
+                                  {!dayInfo().abbreviation.includes(" ") && <br />}
+                                  {dayInfo().abbreviation}
+                                  <br />
+                                  {dayInfo().times > 0 ? `x${dayInfo().times}` : <br />}
+                                </td>
+                              );
+                            }}
+                          />
+                        </tr>
                       )}
                     />
-                  </tr>
-                </thead>
-                <tbody>
-                  <For
-                    each={_byCycle()}
-                    children={(cycle) => (
-                      <tr>
-                        <For
-                          each={Object.keys(cycle)}
-                          children={(day) => {
-                            const dayInfo = createMemo(() => infoForDay(observations(), DateTime.fromISO(day)));
-                            return (
-                              <td>
-                                <span>{DateTime.fromISO(day).toFormat("MM/dd")}</span>
-                                <br />
-                                <span class={`stamp ${dayInfo().stamp}`}>&nbsp;&nbsp;&nbsp;</span>
-                                <br />
-                                {dayInfo().abbreviation}
-                              </td>
-                            );
-                          }}
-                        />
-                      </tr>
-                    )}
-                  />
-                </tbody>
-              </table>
-            </div>
-          )
+                  </tbody>
+                </table>
+              </div>
+            )
       }
     </>
   );
 }
 
 export default Chart;
-

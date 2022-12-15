@@ -5,11 +5,13 @@ import byDay from "./byDay";
 import abbreviation from "./abbreviation";
 import getCycleDay from "./cycleDay";
 import compareObservations from "./compareObservations";
+import { isPeakMucus } from "./assertions";
 
 export type Info = {
   stamp: string
   abbreviation: string
   cycleDay: string
+  times: number
 };
 
 /**
@@ -22,6 +24,7 @@ function infoForDay (observations: Observation[], dateTime: DateTime, large: boo
       stamp: "",
       abbreviation: "??",
       cycleDay: "??",
+      times: 0,
     };
   }
   const observationsByDay = byDay(observations);
@@ -31,10 +34,17 @@ function infoForDay (observations: Observation[], dateTime: DateTime, large: boo
       stamp: "",
       abbreviation: "??",
       cycleDay: "??",
+      times: 0,
     };
   }
   const cycleDay = getCycleDay(observationsForDay[0], observationsByDay);
   const mostFertileObservation = observationsForDay.sort(compareObservations)[0];
+  let times = 0;
+  observationsForDay.forEach((observation) => {
+    if (isPeakMucus(mostFertileObservation) && isPeakMucus(observation)) {
+      times++;
+    }
+  });
   let mostFertileStamp = stamp(mostFertileObservation, observationsByDay);
   const mostFertileAbbreviation = abbreviation(mostFertileObservation);
 
@@ -46,6 +56,7 @@ function infoForDay (observations: Observation[], dateTime: DateTime, large: boo
     cycleDay,
     stamp: mostFertileStamp,
     abbreviation: mostFertileAbbreviation,
+    times,
   };
 }
 

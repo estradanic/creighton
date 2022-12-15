@@ -4,7 +4,7 @@ import { Routes, Route } from "@solidjs/router";
 import Parse from "parse";
 import Login from "./views/Login";
 import Observations from "./views/Observations";
-import Chart from './views/Chart';
+import Chart from "./views/Chart";
 
 Parse.serverURL = "https://creighton.b4a.app";
 Parse.initialize(
@@ -14,15 +14,26 @@ Parse.initialize(
 
 function App (): JSX.Element {
   onMount(() => {
-    if (Parse.User.current()) window.location.href = "/observations";
-    else window.location.href = "/login";
+    if (Parse.User.current() && window.location.href.includes("/login")) window.location.href = "/observations";
+    else if (!Parse.User.current() && !window.location.href.includes("/login")) window.location.href = "/login";
   });
   return (
     <>
       <h1>Creighton Observation Tracker</h1>
-      <a href="/observations">Observations</a>
-      <span>&nbsp;|&nbsp;</span>
-      <a href="/chart">Chart</a>
+      <div class="link-container">
+        <a href="/observations">Observations</a>
+        <span>&nbsp;|&nbsp;</span>
+        <a href="/chart">Chart</a>
+        <span>&nbsp;|&nbsp;</span>
+        <a
+          href="#"
+          onClick={() => {
+            Parse.User.logOut().then(() => { window.location.href = "/login"; }).catch(() => {});
+          }}
+        >
+          Logout
+        </a>
+      </div>
       <Routes>
         <Route path="/" component={Login} />
         <Route path="/login" component={Login} />

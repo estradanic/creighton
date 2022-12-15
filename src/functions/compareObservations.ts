@@ -26,8 +26,6 @@ function compareOnDetails (a: Observation, b: Observation): number {
     (ColorHierarchy[b.color] ?? 0) +
     (CoverageHierarchy[b.coverage] ?? 0);
 
-  console.log({ a, aTotal, b, bTotal });
-
   return bTotal - aTotal;
 }
 
