@@ -30,7 +30,7 @@ function Observations (): JSX.Element {
       </h2>
       <h2>
         <span class={`stamp ${todaysInfo().stamp}`}>&nbsp;&nbsp;&nbsp;</span>
-        {todaysInfo().abbreviation}
+        {todaysInfo().abbreviation}{todaysInfo().times > 0 ? `x${todaysInfo().times}` : ""}
       </h2>
       {
         loading()
