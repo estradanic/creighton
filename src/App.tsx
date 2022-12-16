@@ -37,7 +37,9 @@ function App (): JSX.Element {
         <Link
           href="#"
           onClick={() => {
-            Parse.User.logOut().then(() => { window.location.href = "/login"; }).catch(() => {});
+            Parse.User.logOut().catch((e) => {
+              console.error(e);
+            });
           }}
         >
           Logout

@@ -6,7 +6,7 @@ import infoForDay from "../functions/infoForDay";
 import observationsStore from "../stores/observations";
 
 function Chart (): JSX.Element {
-  const {observations, loading} = observationsStore();
+  const { observations, loading } = observationsStore();
   const _byDay = createMemo(() => byDay(observations()));
   const _byCycle = createMemo(() => byCycle(_byDay()));
 

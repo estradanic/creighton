@@ -6,7 +6,7 @@ import infoForDay from "../functions/infoForDay";
 import observationsStore from "../stores/observations";
 
 function Observations (): JSX.Element {
-  const {observations, loading, setObservations} = observationsStore();
+  const { observations, loading, setObservations } = observationsStore();
   const todaysInfo = createMemo(() => infoForDay(observations(), DateTime.now()));
   return (
     <>

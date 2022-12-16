@@ -5,7 +5,6 @@ import byDay from "./byDay";
 import abbreviation from "./abbreviation";
 import getCycleDay from "./cycleDay";
 import compareObservations from "./compareObservations";
-import { isPeakMucus } from "./assertions";
 
 export type Info = {
   stamp: string
@@ -45,10 +44,10 @@ function infoForDay (observations: Observation[], dateTime: DateTime, large: boo
   }
 
   const mostFertileAbbreviation = abbreviation(mostFertileObservation);
-  
+
   let times = 1;
   observationsForDay.forEach((observation) => {
-    if (observation.id === mostFertileObservation.id){
+    if (observation.id === mostFertileObservation.id) {
       return;
     }
     const _abbreviation = abbreviation(observation);

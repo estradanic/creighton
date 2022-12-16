@@ -1,5 +1,4 @@
 import { Observation } from "../types/ObservationTypes";
-import { isPeakMucus } from "./assertions";
 
 /** Function to get the abbreviation for an observation */
 const abbreviation = (observation: Observation): string => {
