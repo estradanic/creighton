@@ -1,20 +1,12 @@
-import Parse from "parse";
-import { createMemo, createSignal, For, Index, JSX, onMount } from "solid-js";
+import { createMemo, For, Index, JSX } from "solid-js";
 import { DateTime } from "luxon";
-import byCycle from "../functions/byCycle";
+import byCycle, { MAX_CYCLE_LENGTH } from "../functions/byCycle";
 import byDay from "../functions/byDay";
 import infoForDay from "../functions/infoForDay";
-import { Observation } from "../types/ObservationTypes";
+import observationsStore from "../stores/observations";
 
 function Chart (): JSX.Element {
-  const [observations, setObservations] = createSignal<Observation[]>([]);
-  const [loading, setLoading] = createSignal<boolean>(true);
-  onMount(() => {
-    new Parse.Query<Parse.Object<Observation>>("observation").findAll()
-      .then((results) => setObservations(results.map((result) => ({ ...result.attributes, id: result.id }))))
-      .catch((e) => console.error(e))
-      .finally(() => setLoading(false));
-  });
+  const {observations, loading} = observationsStore();
   const _byDay = createMemo(() => byDay(observations()));
   const _byCycle = createMemo(() => byCycle(_byDay()));
 
@@ -29,7 +21,7 @@ function Chart (): JSX.Element {
                   <thead>
                     <tr>
                       <Index
-                        each={new Array<number>(36).fill(0)}
+                        each={new Array<number>(MAX_CYCLE_LENGTH).fill(0)}
                         children={(_, index) => (
                           <th>{index + 1}</th>
                         )}
@@ -54,7 +46,7 @@ function Chart (): JSX.Element {
                                   {!dayInfo().abbreviation.includes(" ") && <br />}
                                   {dayInfo().abbreviation}
                                   <br />
-                                  {dayInfo().times > 0 ? `x${dayInfo().times}` : <br />}
+                                  <i>{dayInfo().times > 0 ? `x${dayInfo().times}` : <br />}</i>
                                 </td>
                               );
                             }}

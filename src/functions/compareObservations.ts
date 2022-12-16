@@ -6,25 +6,28 @@ import {
   SensationHierarchy,
   ColorHierarchy,
   MenstruationHierarchy,
-  CoverageHierarchy,
+  AppearanceMultiplier,
+  ConsistencyMultiplier,
+  SensationMultiplier,
+  ColorMultiplier,
+  StretchabilityMultiplier,
+  MenstruationMultiplier,
 } from "../types/ObservationTypes";
 import { isMenstruation, isPeakMucus } from "./assertions";
 
 function compareOnDetails (a: Observation, b: Observation): number {
-  const aTotal = (MenstruationHierarchy[a.menstruation] ?? 0) +
-    (AppearanceHierarchy[a.appearance] ?? 0) +
-    (StretchabilityHierarchy[a.stretchability] ?? 0) +
-    (ConsistencyHierarchy[a.consistency] ?? 0) +
-    (SensationHierarchy[a.sensation] ?? 0) +
-    (ColorHierarchy[a.color] ?? 0) +
-    (CoverageHierarchy[a.coverage] ?? 0);
-  const bTotal = (MenstruationHierarchy[b.menstruation] ?? 0) +
-    (AppearanceHierarchy[b.appearance] ?? 0) +
-    (StretchabilityHierarchy[b.stretchability] ?? 0) +
-    (ConsistencyHierarchy[b.consistency] ?? 0) +
-    (SensationHierarchy[b.sensation] ?? 0) +
-    (ColorHierarchy[b.color] ?? 0) +
-    (CoverageHierarchy[b.coverage] ?? 0);
+  const aTotal = (MenstruationHierarchy[a.menstruation] ?? 0) * MenstruationMultiplier +
+    (AppearanceHierarchy[a.appearance] ?? 0) * AppearanceMultiplier +
+    (StretchabilityHierarchy[a.stretchability] ?? 0) * StretchabilityMultiplier +
+    (ConsistencyHierarchy[a.consistency] ?? 0) * ConsistencyMultiplier +
+    (SensationHierarchy[a.sensation] ?? 0) * SensationMultiplier +
+    (ColorHierarchy[a.color] ?? 0) * ColorMultiplier;
+  const bTotal = (MenstruationHierarchy[b.menstruation] ?? 0) * MenstruationMultiplier +
+    (AppearanceHierarchy[b.appearance] ?? 0) * AppearanceMultiplier +
+    (StretchabilityHierarchy[b.stretchability] ?? 0) * StretchabilityMultiplier +
+    (ConsistencyHierarchy[b.consistency] ?? 0) * ConsistencyMultiplier +
+    (SensationHierarchy[b.sensation] ?? 0) * SensationMultiplier +
+    (ColorHierarchy[b.color] ?? 0) * ColorMultiplier;
 
   return bTotal - aTotal;
 }

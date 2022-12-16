@@ -1,6 +1,8 @@
 import { Observation } from "../types/ObservationTypes";
 import cycleDay from "./cycleDay";
 
+export const MAX_CYCLE_LENGTH = 35;
+
 function byCycle (observationsByDay: Record<string, Observation[]>): Array<Record<string, Observation[]>> {
   const observationsByCycle: Array<Record<string, Observation[]>> = [];
 
@@ -14,7 +16,8 @@ function byCycle (observationsByDay: Record<string, Observation[]>): Array<Recor
       return;
     }
     if ((currentCycleDay === "??" && observationCycleDay !== "??") ||
-        (parseInt(observationCycleDay) < parseInt(currentCycleDay))) {
+        (parseInt(observationCycleDay) < parseInt(currentCycleDay)) ||
+        (parseInt(currentCycleDay) === MAX_CYCLE_LENGTH + 1)) {
       currentCycle++;
     }
     currentCycleDay = observationCycleDay;

@@ -1,6 +1,6 @@
 import "./App.css";
 import { JSX, onMount } from "solid-js";
-import { Routes, Route } from "@solidjs/router";
+import { Routes, Route, Link } from "@solidjs/router";
 import Parse from "parse";
 import Login from "./views/Login";
 import Observations from "./views/Observations";
@@ -21,18 +21,18 @@ function App (): JSX.Element {
     <>
       <h1>Creighton Observation Tracker</h1>
       <div class="link-container">
-        <a href="/observations">Observations</a>
+        <Link href="/observations">Observations</Link>
         <span>&nbsp;|&nbsp;</span>
-        <a href="/chart">Chart</a>
+        <Link href="/chart">Chart</Link>
         <span>&nbsp;|&nbsp;</span>
-        <a
+        <Link
           href="#"
           onClick={() => {
             Parse.User.logOut().then(() => { window.location.href = "/login"; }).catch(() => {});
           }}
         >
           Logout
-        </a>
+        </Link>
       </div>
       <Routes>
         <Route path="/" component={Login} />

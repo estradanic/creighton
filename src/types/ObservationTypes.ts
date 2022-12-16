@@ -20,56 +20,60 @@ export type Observation = {
   coverage: Coverage
 };
 
-export const CoverageHierarchy: Record<Coverage, number> = {
-  na: 0,
-  blip: 1,
-  little: 2,
-  much: 3,
-  all: 4,
-};
-
 export const AppearanceHierarchy: Record<Appearance, number> = {
   dry: 0,
   damp: 1,
-  wet: 2,
-  shiny: 3,
+  wet: 1,
+  shiny: 2,
 };
+
+export const AppearanceMultiplier = 2;
 
 export const ConsistencyHierarchy: Record<Consistency, number> = {
   na: 0,
-  gummy: 1,
-  pasty: 1,
-  stringy: 5,
+  gummy: 0,
+  pasty: 0,
+  stringy: 1,
 };
+
+export const ConsistencyMultiplier = 3;
 
 export const SensationHierarchy: Record<Sensation, number> = {
   dry: 0,
   smooth: 1,
-  lubricative: 30,
+  lubricative: 10000,
 };
+
+export const SensationMultiplier = 5;
 
 export const ColorHierarchy: Record<Color, number> = {
   na: 0,
-  yellow: 1,
-  "cloudy-white": 2,
-  "cloudy-clear": 3,
-  clear: 20,
-  brown: 21,
-  red: 22,
+  yellow: 3,
+  "cloudy-white": 1,
+  "cloudy-clear": 2,
+  clear: 4,
+  brown: 5,
+  red: 6,
 };
+
+export const ColorMultiplier = 10;
 
 export const StretchabilityHierarchy: Record<Stretchability, number> = {
   none: 0,
-  sticky: 10,
-  tacky: 20,
-  stretchy: 30,
+  sticky: 1,
+  tacky: 2,
+  stretchy: 3,
 };
+
+export const StretchabilityMultiplier = 100;
 
 export const MenstruationHierarchy: Record<Menstruation, number> = {
   none: 0,
-  "very-light": 100,
-  light: 150,
-  medium: 200,
-  heavy: 250,
-  "very-heavy": 300,
+  "very-light": 1,
+  light: 2,
+  medium: 3,
+  heavy: 4,
+  "very-heavy": 5,
 };
+
+export const MenstruationMultiplier = 1000;

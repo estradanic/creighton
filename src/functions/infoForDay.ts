@@ -39,18 +39,23 @@ function infoForDay (observations: Observation[], dateTime: DateTime, large: boo
   }
   const cycleDay = getCycleDay(observationsForDay[0], observationsByDay);
   const mostFertileObservation = observationsForDay.sort(compareObservations)[0];
-  let times = 0;
-  observationsForDay.forEach((observation) => {
-    if (isPeakMucus(mostFertileObservation) && isPeakMucus(observation)) {
-      times++;
-    }
-  });
   let mostFertileStamp = stamp(mostFertileObservation, observationsByDay);
-  const mostFertileAbbreviation = abbreviation(mostFertileObservation);
-
   if (mostFertileStamp.includes("p-plus") && large) {
     mostFertileStamp += " p-plus-large";
   }
+
+  const mostFertileAbbreviation = abbreviation(mostFertileObservation);
+  
+  let times = 1;
+  observationsForDay.forEach((observation) => {
+    if (observation.id === mostFertileObservation.id){
+      return;
+    }
+    const _abbreviation = abbreviation(observation);
+    if (_abbreviation === mostFertileAbbreviation) {
+      times += 1;
+    }
+  });
 
   return {
     cycleDay,

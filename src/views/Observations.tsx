@@ -1,20 +1,12 @@
-import { createSignal, onMount, createMemo, For, JSX } from "solid-js";
+import { createMemo, For, JSX } from "solid-js";
 import { DateTime } from "luxon";
 import ExistingObservation from "../components/ExistingObservation";
 import NewObservation from "../components/NewObservation";
 import infoForDay from "../functions/infoForDay";
-import Parse from "parse";
-import { Observation } from "../types/ObservationTypes";
+import observationsStore from "../stores/observations";
 
 function Observations (): JSX.Element {
-  const [observations, setObservations] = createSignal<Observation[]>([]);
-  const [loading, setLoading] = createSignal<boolean>(true);
-  onMount(() => {
-    new Parse.Query<Parse.Object<Observation>>("observation").findAll()
-      .then((results) => setObservations(results.map((result) => ({ ...result.attributes, id: result.id }))))
-      .catch((e) => console.error(e))
-      .finally(() => setLoading(false));
-  });
+  const {observations, loading, setObservations} = observationsStore();
   const todaysInfo = createMemo(() => infoForDay(observations(), DateTime.now()));
   return (
     <>
@@ -30,7 +22,7 @@ function Observations (): JSX.Element {
       </h2>
       <h2>
         <span class={`stamp ${todaysInfo().stamp}`}>&nbsp;&nbsp;&nbsp;</span>
-        {todaysInfo().abbreviation}{todaysInfo().times > 0 ? `x${todaysInfo().times}` : ""}
+        {todaysInfo().abbreviation}<i>{todaysInfo().times > 0 ? `x${todaysInfo().times}` : ""}</i>
       </h2>
       {
         loading()

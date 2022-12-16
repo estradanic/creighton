@@ -26,59 +26,44 @@ const abbreviation = (observation: Observation): string => {
   } else if (menstruation !== "none") {
     abbreviation[1] = " ";
   }
-  if (sensation === "dry" && appearance === "dry") {
+  if (stretchability === "none") {
     abbreviation[2] = "0";
-  }
-  if ((sensation === "dry" && (appearance === "damp" || appearance === "wet")) ||
-      (sensation === "smooth" && appearance === "dry")) {
-    abbreviation[2] = "1";
-  }
-  if ((appearance === "damp" || appearance === "wet") && sensation === "smooth") {
-    abbreviation[2] = "2";
-  }
-  if (appearance === "shiny") {
-    abbreviation[2] = "4";
-  }
-  if (stretchability === "sticky") {
+    if (appearance === "damp") {
+      abbreviation[2] = "2";
+      abbreviation[3] = "D";
+    } else if (appearance === "wet") {
+      abbreviation[2] = "2";
+      abbreviation[3] = "W";
+    } else if (appearance === "shiny") {
+      abbreviation[3] = "S";
+      abbreviation[2] = "4";
+    }
+    if (sensation === "lubricative") {
+      abbreviation[2] = "10";
+    }
+  } else if (stretchability === "sticky") {
     abbreviation[2] = "6";
-  }
-  if (stretchability === "tacky") {
+  } else if (stretchability === "tacky") {
     abbreviation[2] = "8";
-  }
-  if (isPeakMucus(observation)) {
+  } else if (stretchability === "stretchy") {
     abbreviation[2] = "10";
-  }
-  if (appearance === "damp") {
-    abbreviation[3] = "D";
-  }
-  if (appearance === "wet") {
-    abbreviation[3] = "W";
-  }
-  if (appearance === "shiny") {
-    abbreviation[3] = "S";
   }
   if (color === "brown") {
     abbreviation[4] = "B";
-  }
-  if (color === "cloudy-white") {
+  } else if (color === "cloudy-white") {
     abbreviation[4] = "C";
-  }
-  if (color === "cloudy-clear") {
+  } else if (color === "cloudy-clear") {
     abbreviation[4] = "C/K";
-  }
-  if (color === "clear") {
+  } else if (color === "clear") {
     abbreviation[4] = "K";
-  }
-  if (color === "yellow") {
+  } else if (color === "yellow") {
     abbreviation[4] = "Y";
-  }
-  if (color === "red") {
+  } else if (color === "red") {
     abbreviation[4] = "R";
   }
   if (consistency === "gummy") {
     abbreviation[5] = "G";
-  }
-  if (consistency === "pasty") {
+  } else if (consistency === "pasty") {
     abbreviation[5] = "P";
   }
   if (sensation === "lubricative") {
