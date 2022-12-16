@@ -12,10 +12,19 @@ Parse.initialize(
   "WpWOMB0WXQ1vGl3EnSNi657F88BL2ClLSPgJAmgN",
 );
 
+function isOnLoginPage (): boolean {
+  return window.location.href.split("/").filter((hrefPart) => {
+    return hrefPart === "observations" || hrefPart === "chart";
+  }).length === 0;
+}
+
 function App (): JSX.Element {
   onMount(() => {
-    if (Parse.User.current() && window.location.href.includes("/login")) window.location.href = "/observations";
-    else if (!Parse.User.current() && !window.location.href.includes("/login")) window.location.href = "/login";
+    if (Parse.User.current() && isOnLoginPage()) {
+      window.location.href = "/observations";
+    } else if (!Parse.User.current() && !isOnLoginPage()) {
+      window.location.href = "/login";
+    }
   });
   return (
     <>
