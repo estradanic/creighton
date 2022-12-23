@@ -14,17 +14,19 @@ const abbreviation = (observation: Observation): string => {
     abbreviation[0] = "H";
   } else if (menstruation === "very-heavy") {
     abbreviation[0] = "VH";
-  } else if (color === "red" || color === "brown") {
-    abbreviation[0] = "VL";
   }
 
-  if (color === "red") {
-    abbreviation[1] = "R ";
-  } else if (color === "brown") {
-    abbreviation[1] = "B ";
-  } else if (menstruation !== "none") {
+  if (menstruation !== "none") {
+    abbreviation[1] = " ";
+    if (color === "red") {
+      abbreviation[1] = "R ";
+    } else if (color === "brown") {
+      abbreviation[1] = "B ";
+    }
+  } else {
     abbreviation[1] = " ";
   }
+
   if (stretchability === "none") {
     abbreviation[2] = "0";
     if (appearance === "damp") {

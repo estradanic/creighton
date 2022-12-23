@@ -1,3 +1,4 @@
+import { DateTime } from "luxon";
 import { Observation } from "../types/ObservationTypes";
 
 /** Function to say whether an observation has peak type mucus */
@@ -30,3 +31,17 @@ export const isFertile = ({
 export const isMenstruation = ({ menstruation }: Pick<Observation, "menstruation">): boolean => {
   return menstruation !== "none";
 };
+
+/** Function to say whether an observation occurs on the first cycle day */
+export function isFirstCycleDay (observation: Observation, observationsByDay: Record<string, Observation[]>): boolean {
+  const today = DateTime.fromISO(observation.datetime);
+  const todaysObservations = observationsByDay[today.toISODate()];
+  const yesterdaysObservations = observationsByDay[today.minus({ days: 1 }).toISODate()];
+  if (todaysObservations === undefined || yesterdaysObservations === undefined) {
+    return false;
+  }
+  const todaysObservationsMenstruation = todaysObservations.filter((observation) => isMenstruation(observation));
+  const yesterdaysObservationsMenstruation = yesterdaysObservations.filter((observation) =>
+    isMenstruation(observation));
+  return (todaysObservationsMenstruation.length > 0 && yesterdaysObservationsMenstruation.length === 0);
+}

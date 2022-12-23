@@ -1,3 +1,10 @@
+* {
+  --green: rgb(0, 194, 0);
+}
+
+
+
+
 :root {
   font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
   font-synthesis: none;
@@ -38,7 +45,7 @@
 }
 
 .green {
-  background-color: green;
+  background-color: var(--green);
 }
 
 .yellow {
@@ -54,7 +61,7 @@
 }
 
 .green-baby {
-  background: green url("/assets/baby.png");
+  background: var(--green) url("/assets/baby.png");
   background-position: center;
   background-size: contain;
   background-repeat: no-repeat;
@@ -173,11 +180,22 @@
   margin-bottom: 2rem;
 }
 
+.chart-abbreviation {
+  white-space: nowrap;
+  font-weight: bold;
+}
+
+.chart-element {
+  margin-top: 0.25rem;
+  display: inline-block;
+}
+
 td>.stamp {
   height: 2rem;
   width: 1.5rem;
   display: inline-block;
-  margin: auto;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 table, th, td {
