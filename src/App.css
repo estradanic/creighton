@@ -1,5 +1,6 @@
 * {
   --green: rgb(0, 194, 0);
+  --contrast: -1px -1px 3px black, 1px 1px 3px black, 1px -1px 3px black, -1px 1px 3px black;
 }
 
 
@@ -73,7 +74,7 @@
 
 .p-plus::after {
   color: white;
-  text-shadow: -1px -1px 5px black, 1px 1px 5px black;
+  text-shadow: var(--contrast);
   font-size: large;
   margin: 0;
   margin-right: 0;
@@ -86,6 +87,10 @@
 
 .p-plus-large::after {
   line-height: 1.5;
+}
+
+.peak::after {
+  content: "P";
 }
 
 .p-plus-one::after {
@@ -101,7 +106,7 @@
 }
 
 .white {
-  background: white url("/assets/baby.png");
+  background: oldlace url("/assets/baby.png");
   background-position: center;
   background-size: contain;
   background-repeat: no-repeat;
@@ -188,6 +193,22 @@
 .chart-element {
   margin-top: 0.25rem;
   display: inline-block;
+}
+
+.direction:not(.none) {
+  font-weight: bolder;
+  font-size: large;
+}
+
+.direction.up::before {
+  content: "⬆";
+  text-shadow: var(--contrast);
+  color: white;
+}
+
+.direction.down::before {
+  content: "⬇";
+  color: var(--green);
 }
 
 td>.stamp {

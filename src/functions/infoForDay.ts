@@ -1,16 +1,17 @@
 import { DateTime } from "luxon";
-import { Observation } from "../types/ObservationTypes";
+import { Direction, Observation } from "../types/ObservationTypes";
 import stamp from "./stamp";
 import byDay from "./byDay";
 import abbreviation from "./abbreviation";
 import getCycleDay from "./cycleDay";
-import compareObservations from "./compareObservations";
+import compareObservations, { blurryCompareObservations } from "./compareObservations";
 
 export type Info = {
   stamp: string
   abbreviation: string
   cycleDay: string
   times: number
+  direction: Direction
 };
 
 /**
@@ -24,6 +25,7 @@ function infoForDay (observations: Observation[], dateTime: DateTime, large: boo
       abbreviation: "??",
       cycleDay: "??",
       times: 0,
+      direction: "none",
     };
   }
   const observationsByDay = byDay(observations);
@@ -34,10 +36,13 @@ function infoForDay (observations: Observation[], dateTime: DateTime, large: boo
       abbreviation: "??",
       cycleDay: "??",
       times: 0,
+      direction: "none",
     };
   }
   const cycleDay = getCycleDay(observationsForDay[0], observationsByDay);
+
   const mostFertileObservation = observationsForDay.sort(compareObservations)[0];
+
   let mostFertileStamp = stamp(mostFertileObservation, observationsByDay);
   if (mostFertileStamp.includes("p-plus") && large) {
     mostFertileStamp += " p-plus-large";
@@ -56,11 +61,24 @@ function infoForDay (observations: Observation[], dateTime: DateTime, large: boo
     }
   });
 
+  let direction: Direction = "none";
+  const observationsForYesterday = observationsByDay[dateTime.minus({ days: 1 }).toISODate()];
+  if (observationsForYesterday?.length) {
+    const yesterdayMostFertileObservation = observationsForYesterday.sort(compareObservations)[0];
+    const comparison = blurryCompareObservations(mostFertileObservation, yesterdayMostFertileObservation);
+    if (comparison < -10) {
+      direction = "up";
+    } else if (comparison > 10) {
+      direction = "down";
+    }
+  }
+
   return {
     cycleDay,
     stamp: mostFertileStamp,
     abbreviation: mostFertileAbbreviation,
     times,
+    direction,
   };
 }
 

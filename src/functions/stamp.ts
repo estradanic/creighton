@@ -6,6 +6,7 @@ import { isMenstruation, isFertile, isPeakMucus } from "./assertions";
 const stamp = (observation: Observation, observationsByDay: Record<string, Observation[]>): string => {
   let stamp: string = "";
   const dateTime = DateTime.fromISO(observation.datetime);
+  const dayAfter = dateTime.plus({ days: 1 }).toISODate();
   const dayBefore = dateTime.minus({ days: 1 }).toISODate();
   const secondDayBefore = dateTime.minus({ days: 2 }).toISODate();
   const thirdDayBefore = dateTime.minus({ days: 3 }).toISODate();
@@ -49,6 +50,17 @@ const stamp = (observation: Observation, observationsByDay: Record<string, Obser
           }
         }
       }
+    }
+  } else {
+    let foundPeak = false;
+    for (const curObservation of observationsByDay[dayAfter] ?? []) {
+      if (isPeakMucus(curObservation)) {
+        foundPeak = true;
+        break;
+      }
+    }
+    if (!foundPeak) {
+      stamp += " p-plus peak";
     }
   }
   return stamp;

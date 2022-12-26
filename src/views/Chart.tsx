@@ -47,6 +47,7 @@ function Chart (): JSX.Element {
                                   <span class="chart-abbreviation chart-element">{dayInfo().abbreviation}</span>
                                   <br />
                                   <i class="chart-element">{dayInfo().times > 0 ? `x${dayInfo().times}` : <br />}</i>
+                                  <span class={`direction ${dayInfo().direction}`} />
                                 </td>
                               );
                             }}

@@ -77,3 +77,5 @@ export const MenstruationHierarchy: Record<Menstruation, number> = {
 };
 
 export const MenstruationMultiplier = 1000;
+
+export type Direction = "up" | "down" | "none";
