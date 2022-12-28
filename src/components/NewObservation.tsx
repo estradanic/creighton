@@ -26,6 +26,7 @@ import {
   Stretchability,
 } from "../types/ObservationTypes";
 import CoverageField from "./Fields/CoverageField";
+import PmsField from "./Fields/PmsField";
 
 export type NewObservationProps = {
   observations: Observation[]
@@ -44,6 +45,7 @@ function NewObservation (_props: NewObservationProps): JSX.Element {
   const [yellowOverride, setYellowOverride] = createSignal<boolean>(false);
   const [notes, setNotes] = createSignal<string>("");
   const [id, setId] = createSignal<string>("");
+  const [pms, setPms] = createSignal<boolean>(false);
   const [coverage, setCoverage] = createSignal<Coverage>("na");
 
   const thisObservation = (): Observation => {
@@ -59,6 +61,7 @@ function NewObservation (_props: NewObservationProps): JSX.Element {
       yellowOverride: yellowOverride(),
       notes: notes(),
       coverage: coverage(),
+      pms: pms(),
     };
   };
 
@@ -74,6 +77,7 @@ function NewObservation (_props: NewObservationProps): JSX.Element {
     setNotes("");
     setId("");
     setCoverage("na");
+    setPms(false);
   };
 
   const observationsSet = (prev: Observation[]): Observation[] => [...prev, thisObservation()];
@@ -98,6 +102,7 @@ function NewObservation (_props: NewObservationProps): JSX.Element {
       yellowOverride: yellowOverride(),
       notes: notes(),
       coverage: coverage(),
+      pms: pms(),
     });
     observation.save()
       .then(save)
@@ -138,6 +143,7 @@ function NewObservation (_props: NewObservationProps): JSX.Element {
           yellowOverride={yellowOverride()}
           setYellowOverride={setYellowOverride}
         />
+        <PmsField pms={pms()} setPms={setPms} />
         <NotesField notes={notes()} setNotes={setNotes} />
         <Submit disabled={_submitDisabled()} />
       </form>

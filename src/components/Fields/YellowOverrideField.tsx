@@ -16,7 +16,7 @@ function YellowOverrideField (_props: YellowOverrideFieldProps): JSX.Element {
   };
   return (
     <>
-      <label for="yellowOverride">Override</label>
+      <label for="yellowOverride">Yellow Stamp?</label>
       <input
         type="checkbox"
         name="yellowOverride"
