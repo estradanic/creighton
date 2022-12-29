@@ -19,6 +19,7 @@ export type Observation = {
   yellowOverride: boolean
   coverage: Coverage
   pms: boolean
+  temperature?: number
 };
 
 export const AppearanceHierarchy: Record<Appearance, number> = {

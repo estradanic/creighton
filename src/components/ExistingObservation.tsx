@@ -27,6 +27,7 @@ import {
 } from "../types/ObservationTypes";
 import CoverageField from "./Fields/CoverageField";
 import PmsField from "./Fields/PmsField";
+import TemperatureField from './Fields/TemperatureField';
 
 export type ExistingObservationProps = Observation & {
   observations: Observation[]
@@ -46,6 +47,7 @@ function ExistingObservation (props: ExistingObservationProps): JSX.Element {
   const [coverage, setCoverage] = createSignal<Coverage>("na");
   const [pms, setPms] = createSignal<boolean>(false);
   const [notes, setNotes] = createSignal<string>("");
+  const [temperature, setTemperature] = createSignal<number | undefined>(undefined);
 
   const initialize = (): void => {
     setDatetime(DateTime.fromISO(props.datetime));
@@ -59,6 +61,7 @@ function ExistingObservation (props: ExistingObservationProps): JSX.Element {
     setNotes(props.notes);
     setCoverage(props.coverage);
     setPms(props.pms);
+    setTemperature(props.temperature);
   };
 
   onMount(initialize);
@@ -77,6 +80,7 @@ function ExistingObservation (props: ExistingObservationProps): JSX.Element {
       yellowOverride: yellowOverride(),
       coverage: coverage(),
       pms: pms(),
+      temperature: temperature(),
     };
   };
 
@@ -96,6 +100,7 @@ function ExistingObservation (props: ExistingObservationProps): JSX.Element {
       yellowOverride: yellowOverride(),
       coverage: coverage(),
       pms: pms(),
+      temperature: temperature(),
     });
     props.setObservations(observationsSet);
   };
@@ -176,6 +181,7 @@ function ExistingObservation (props: ExistingObservationProps): JSX.Element {
           setYellowOverride={setYellowOverride}
         />
         <PmsField disabled={disabled()} pms={pms()} setPms={setPms} />
+        <TemperatureField disabled={disabled()} temperature={temperature()} setTemperature={setTemperature} />
         <NotesField disabled={disabled()} notes={notes()} setNotes={setNotes} />
         <Submit disabled={disabled()} />
       </form>

@@ -27,6 +27,7 @@ import {
 } from "../types/ObservationTypes";
 import CoverageField from "./Fields/CoverageField";
 import PmsField from "./Fields/PmsField";
+import TemperatureField from './Fields/TemperatureField';
 
 export type NewObservationProps = {
   observations: Observation[]
@@ -47,6 +48,7 @@ function NewObservation (_props: NewObservationProps): JSX.Element {
   const [id, setId] = createSignal<string>("");
   const [pms, setPms] = createSignal<boolean>(false);
   const [coverage, setCoverage] = createSignal<Coverage>("na");
+  const [temperature, setTemperature] = createSignal<number | undefined>(undefined);
 
   const thisObservation = (): Observation => {
     return {
@@ -62,6 +64,7 @@ function NewObservation (_props: NewObservationProps): JSX.Element {
       notes: notes(),
       coverage: coverage(),
       pms: pms(),
+      temperature: temperature(),
     };
   };
 
@@ -78,6 +81,7 @@ function NewObservation (_props: NewObservationProps): JSX.Element {
     setId("");
     setCoverage("na");
     setPms(false);
+    setTemperature(undefined);
   };
 
   const observationsSet = (prev: Observation[]): Observation[] => [...prev, thisObservation()];
@@ -103,6 +107,7 @@ function NewObservation (_props: NewObservationProps): JSX.Element {
       notes: notes(),
       coverage: coverage(),
       pms: pms(),
+      temperature: temperature(),
     });
     observation.save()
       .then(save)
@@ -144,6 +149,7 @@ function NewObservation (_props: NewObservationProps): JSX.Element {
           setYellowOverride={setYellowOverride}
         />
         <PmsField pms={pms()} setPms={setPms} />
+        <TemperatureField temperature={temperature()} setTemperature={setTemperature} />
         <NotesField notes={notes()} setNotes={setNotes} />
         <Submit disabled={_submitDisabled()} />
       </form>
