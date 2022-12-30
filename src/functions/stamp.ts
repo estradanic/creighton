@@ -51,7 +51,7 @@ const stamp = (observation: Observation, observationsByDay: Record<string, Obser
         }
       }
     }
-  } else {
+  } else if (observationsByDay[dayAfter]?.length) {
     let foundPeak = false;
     for (const curObservation of observationsByDay[dayAfter] ?? []) {
       if (isPeakMucus(curObservation)) {
