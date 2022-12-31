@@ -27,7 +27,7 @@ import {
 } from "../types/ObservationTypes";
 import CoverageField from "./Fields/CoverageField";
 import PmsField from "./Fields/PmsField";
-import TemperatureField from './Fields/TemperatureField';
+import TemperatureField from "./Fields/TemperatureField";
 
 export type NewObservationProps = {
   observations: Observation[]

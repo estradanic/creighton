@@ -1,11 +1,11 @@
-import { JSX } from 'solid-js';
+import { JSX } from "solid-js";
 
 export type DialogProps = {
   isOpen: boolean
   onClose: (e?: Event) => void
   closeButtonText?: string
   children: JSX.Element
-}
+};
 
 function Dialog (props: DialogProps): JSX.Element {
   return (
