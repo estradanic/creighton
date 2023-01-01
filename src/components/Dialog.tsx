@@ -19,7 +19,7 @@ function DialogCloseButton (props: DialogCloseButtonProps): JSX.Element {
 
 function Dialog (props: DialogProps): JSX.Element {
   return (
-    <div>
+    <>
       {props.isOpen && (
         <div class="dialog" onClick={props.onClose}>
           <div class="dialog-content" onClick={(e) => e.stopPropagation()}>
@@ -29,7 +29,7 @@ function Dialog (props: DialogProps): JSX.Element {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 }
 
