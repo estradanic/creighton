@@ -204,13 +204,12 @@
 }
 
 .direction.up::before {
-  content: "⬆";
-  text-shadow: var(--contrast);
-  color: white;
+  content: "▲";
+  color: red;
 }
 
 .direction.down::before {
-  content: "⬇";
+  content: "▼";
   color: var(--green);
 }
 
