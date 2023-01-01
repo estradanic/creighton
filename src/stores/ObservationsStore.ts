@@ -11,12 +11,17 @@ export type ObservationsStoreReturn = {
   setObservations: Setter<Observation[]>
 };
 
-const observationsStore = (): ObservationsStoreReturn => {
+const ObservationsStore = (): ObservationsStoreReturn => {
   onMount(() => {
-    new Parse.Query<Parse.Object<Observation>>("observation").findAll()
-      .then((results) => setObservations(results.map((result) => ({ ...result.attributes, id: result.id }))))
-      .catch((e) => console.error(e))
-      .finally(() => setLoading(false));
+    if (!observations()?.length) {
+      new Parse.Query<Parse.Object<Observation>>("observation")
+        .descending("datetime")
+        .limit(500)
+        .find()
+        .then((results) => setObservations(results.map((result) => ({ ...result.attributes, id: result.id }))))
+        .catch((e) => console.error(e))
+        .finally(() => setLoading(false));
+    }
   });
 
   return {
@@ -26,4 +31,4 @@ const observationsStore = (): ObservationsStoreReturn => {
   };
 };
 
-export default observationsStore;
+export default ObservationsStore;

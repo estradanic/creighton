@@ -7,16 +7,25 @@ export type DialogProps = {
   children: JSX.Element
 };
 
+type DialogCloseButtonProps = Pick<DialogProps, "onClose" | "closeButtonText">;
+
+function DialogCloseButton (props: DialogCloseButtonProps): JSX.Element {
+  return (
+    <div class="flex-full-width">
+      <button onClick={() => props.onClose()}>{props.closeButtonText ?? "Close"}</button>
+    </div>
+  );
+}
+
 function Dialog (props: DialogProps): JSX.Element {
   return (
     <div>
       {props.isOpen && (
         <div class="dialog" onClick={props.onClose}>
           <div class="dialog-content" onClick={(e) => e.stopPropagation()}>
+            <DialogCloseButton {...props} />
             {props.children}
-            <div class="flex-full-width">
-              <button onClick={props.onClose}>{props.closeButtonText ?? "Close"}</button>
-            </div>
+            <DialogCloseButton {...props} />
           </div>
         </div>
       )}

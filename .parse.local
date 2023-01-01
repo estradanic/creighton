@@ -1,0 +1,10 @@
+{
+  "applications": {
+    "creighton": {
+      "applicationId": "PptpNlgdw5ZmgpHZwthVvLTUaVlQMkF0919cu1In"
+    },
+    "_default": {
+      "link": "creighton"
+    }
+  }
+}

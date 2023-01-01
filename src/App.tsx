@@ -3,9 +3,9 @@ import { JSX, lazy, onMount } from "solid-js";
 import { Routes, Route, Link } from "@solidjs/router";
 import Parse from "parse";
 
-const Observations = lazy(() => import("./views/Observations"));
-const Login = lazy(() => import("./views/Login"));
-const Chart = lazy(() => import("./views/Chart"));
+const Observations = lazy(async () => await import("./views/Observations"));
+const Login = lazy(async () => await import("./views/Login"));
+const Chart = lazy(async () => await import("./views/Chart"));
 
 Parse.serverURL = "https://creighton.b4a.app";
 Parse.initialize(

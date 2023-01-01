@@ -3,10 +3,10 @@ import { DateTime } from "luxon";
 import ExistingObservation from "../components/ExistingObservation";
 import NewObservation from "../components/NewObservation";
 import infoForDay from "../functions/infoForDay";
-import observationsStore from "../stores/observations";
+import ObservationsStore from "../stores/ObservationsStore";
 
 function Observations (): JSX.Element {
-  const { observations, loading, setObservations } = observationsStore();
+  const { observations, loading, setObservations } = ObservationsStore();
   const todaysInfo = createMemo(() => infoForDay(observations(), DateTime.now()));
   return (
     <>
@@ -32,14 +32,10 @@ function Observations (): JSX.Element {
               <>
                 <NewObservation setObservations={setObservations} observations={observations()} />
                 <For
-                  each={observations().sort((a, b) => b.datetime.localeCompare(a.datetime))}
+                  each={observations()}
                   fallback={<h2>No observations yet.</h2>}
                   children={(observation) => (
-                    <ExistingObservation
-                      setObservations={setObservations}
-                      observations={observations()}
-                      {...observation}
-                    />
+                    <ExistingObservation {...observation} />
                   )}
                 />
               </>

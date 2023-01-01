@@ -48,11 +48,14 @@ declare module "html2pdf.js" {
     }
   };
 
-  class Html2Pdf {
+  class Html2PdfClass {
     constructor (options?: Html2PdfOptions);
-    from (element: Element): Html2Pdf;
-    set (options: Html2PdfOptions): Html2Pdf;
+    from (element: Element): Html2PdfClass;
+    set (options: Html2PdfOptions): Html2PdfClass;
     save (filename?: string): void;
   }
-  export default function html2pdf (): Html2Pdf;
+
+  type Html2Pdf = typeof html2pdf;
+
+  export default function html2pdf (): Html2PdfClass;
 }

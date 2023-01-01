@@ -1,5 +1,5 @@
 import Parse from "parse";
-import { createMemo, createSignal, JSX, onMount, Setter } from "solid-js";
+import { createMemo, createSignal, JSX, onMount } from "solid-js";
 import { DateTime } from "luxon";
 import ColorField from "./Fields/ColorField";
 import DatetimeField from "./Fields/DatetimeField";
@@ -28,13 +28,12 @@ import {
 import CoverageField from "./Fields/CoverageField";
 import PmsField from "./Fields/PmsField";
 import TemperatureField from "./Fields/TemperatureField";
+import ObservationsStore from "../stores/ObservationsStore";
 
-export type ExistingObservationProps = Observation & {
-  observations: Observation[]
-  setObservations: Setter<Observation[]>
-};
+export type ExistingObservationProps = Observation & { style?: JSX.CSSProperties };
 
 function ExistingObservation (props: ExistingObservationProps): JSX.Element {
+  const { observations, setObservations } = ObservationsStore();
   const [disabled, setDisabled] = createSignal(true);
   const [datetime, setDatetime] = createSignal(DateTime.now());
   const [menstruation, setMenstruation] = createSignal<Menstruation>("none");
@@ -102,7 +101,7 @@ function ExistingObservation (props: ExistingObservationProps): JSX.Element {
       pms: pms(),
       temperature: temperature(),
     });
-    props.setObservations(observationsSet);
+    setObservations(observationsSet);
   };
 
   const onEditSubmit = (e: Event): void => {
@@ -119,10 +118,10 @@ function ExistingObservation (props: ExistingObservationProps): JSX.Element {
 
   const destroy = async (observation: Parse.Object): Promise<void> => {
     await observation.destroy();
-    props.setObservations((prev) => [...prev.filter((o) => o.id !== props.id)]);
+    setObservations((prev) => [...prev.filter((o) => o.id !== props.id)]);
   };
 
-  const onDeleteSubmit = (e: Event): void => {
+  const deleteObservation = (e: Event): void => {
     e.preventDefault();
     setDisabled(true);
     new Parse.Query("observation").get(props.id)
@@ -134,13 +133,13 @@ function ExistingObservation (props: ExistingObservationProps): JSX.Element {
       });
   };
 
-  const _byDay = createMemo(() => byDay(props.observations));
+  const _byDay = createMemo(() => byDay(observations()));
   const _cycleDay = createMemo(() => cycleDay(thisObservation(), _byDay()));
   const _stamp = createMemo(() => `stamp ${stamp(thisObservation(), _byDay())}`);
   const _abbreviation = createMemo(() => abbreviation(thisObservation()));
 
   return (
-    <div class={`observation ${datetime().weekdayLong}`}>
+    <div class={`observation ${datetime().weekdayLong}`} style={props.style}>
       <h3>Cycle Day: {_cycleDay()}</h3>
       <h3>{datetime().toFormat("EEEE MMM dd, yyyy @ t")}</h3>
       <h3>
@@ -184,10 +183,8 @@ function ExistingObservation (props: ExistingObservationProps): JSX.Element {
         <TemperatureField disabled={disabled()} temperature={temperature()} setTemperature={setTemperature} />
         <NotesField disabled={disabled()} notes={notes()} setNotes={setNotes} />
         <Submit disabled={disabled()} />
-      </form>
-      <form onSubmit={onDeleteSubmit}>
         <label for="delete" />
-        <input type="submit" value="Delete" class="delete" disabled={disabled()} />
+        <input type="button" value="Delete" class="delete" disabled={disabled()} onClick={deleteObservation} />
       </form>
     </div>
   );

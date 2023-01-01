@@ -2,6 +2,7 @@
   --green: rgb(0, 194, 0);
   --dim: rgb(0, 0, 0, 0.25);
   --contrast: -1px -1px 3px black, 1px 1px 3px black, 1px -1px 3px black, -1px 1px 3px black;
+  box-sizing: border-box;
 }
 
 :root {
@@ -193,9 +194,13 @@
   display: inline-block;
 }
 
+.temperature {
+  font-size: small;
+  white-space: nowrap;
+}
+
 .direction:not(.none) {
   font-weight: bolder;
-  font-size: large;
 }
 
 .direction.up::before {
@@ -228,12 +233,28 @@
   max-width: calc(100vw - 8rem);
   width: max-content;
   overflow-y: auto;
-  padding: 2rem;
   background-color: whitesmoke;
   border: 1px solid black;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  overflow-x: hidden;
+  padding: 2rem 0;
+}
+
+@media screen and (max-width: 900px) {
+  .dialog-content {
+    max-height: 100vh;
+    max-width: 100vw;
+    height: 100vh;
+    width: 100vw;
+    border: none;
+  }
+
+  .dialog-content > .observation {
+    margin: 1rem;
+    width: 100%;
+  }
 }
 
 .flex-full-width {

@@ -3,14 +3,29 @@ import { DateTime } from "luxon";
 import byCycle from "../functions/byCycle";
 import byDay from "../functions/byDay";
 import infoForDay from "../functions/infoForDay";
-import observationsStore from "../stores/observations";
+import ObservationsStore from "../stores/ObservationsStore";
 import Dialog from "../components/Dialog";
 import { Observation } from "../types/ObservationTypes";
 import ExistingObservation from "../components/ExistingObservation";
-import html2pdf from "html2pdf.js";
+import Html2PdfStore from "../stores/Html2PdfStore";
+import { Html2PdfOptions } from "html2pdf.js";
+
+const JS_PDF_OPTIONS = {
+  unit: "in",
+  format: "letter",
+  orientation: "landscape",
+} satisfies Html2PdfOptions["jsPDF"];
+
+const HTML_2_CANVAS_OPTIONS = { scale: 2 } satisfies Html2PdfOptions["html2canvas"];
+
+const HTML_2_PDF_OPTIONS = {
+  margin: [0.5, 0],
+  html2canvas: HTML_2_CANVAS_OPTIONS,
+  jsPDF: JS_PDF_OPTIONS,
+} satisfies Html2PdfOptions;
 
 function Chart (): JSX.Element {
-  const { observations, loading, setObservations } = observationsStore();
+  const { observations, loading } = ObservationsStore();
   const [observationsDialogIsOpen, setObservationsDialogIsOpen] = createSignal(false);
   const [openObservations, setOpenObservations] = createSignal<Observation[]>([]);
   const _byDay = createMemo(() => byDay(observations()));
@@ -21,24 +36,21 @@ function Chart (): JSX.Element {
     e.preventDefault();
     const chart = document.querySelector(".chart-container");
     if (chart) {
-      html2pdf()
-        .from(chart)
-        .set({
-          margin: 0.5,
-          html2canvas: {
-            scale: 2,
-            windowWidth: chart.scrollWidth,
-            width: chart.scrollWidth,
-            windowHeight: chart.scrollHeight,
-            height: chart.scrollHeight,
-          },
-          jsPDF: {
-            unit: "in",
-            format: "letter",
-            orientation: "landscape",
-          },
-        })
-        .save("chart.pdf");
+      Html2PdfStore()
+        .then((html2pdf) => html2pdf()
+          .from(chart)
+          .set({
+            ...HTML_2_PDF_OPTIONS,
+            html2canvas: {
+              ...HTML_2_CANVAS_OPTIONS,
+              windowWidth: chart.scrollWidth,
+              width: chart.scrollWidth,
+              windowHeight: chart.scrollHeight,
+              height: chart.scrollHeight,
+            },
+          })
+          .save("chart.pdf"))
+        .catch((error) => console.error(error));
     }
   };
 
@@ -53,7 +65,7 @@ function Chart (): JSX.Element {
         <For
           each={openObservations()}
           children={(observation) => (
-            <ExistingObservation {...observation} observations={observations()} setObservations={setObservations} />
+            <ExistingObservation {...observation} />
           )}
         />
       </Dialog>
@@ -93,6 +105,10 @@ function Chart (): JSX.Element {
                                   class="clickable"
                                 >
                                   <span class="chart-element">{DateTime.fromISO(day).toFormat("MM/dd")}</span>
+                                  <br />
+                                  <strong class="chart-element temperature">
+                                    {dayInfo().temperature}
+                                  </strong>
                                   <br />
                                   <span class={`stamp ${dayInfo().stamp} chart-element`}>&nbsp;&nbsp;&nbsp;</span>
                                   <br />

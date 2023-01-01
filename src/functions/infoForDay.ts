@@ -12,6 +12,7 @@ export type Info = {
   cycleDay: string
   times: number
   direction: Direction
+  temperature?: string
 };
 
 /**
@@ -41,6 +42,12 @@ function infoForDay (observations: Observation[], dateTime: DateTime, large: boo
   }
   const cycleDay = getCycleDay(observationsForDay[0], observationsByDay);
 
+  let temperature: number | undefined = Math.max(...observationsForDay
+    .map((observation) => observation.temperature ?? 0));
+  if (temperature === 0 || isNaN(temperature)) {
+    temperature = undefined;
+  }
+
   const mostFertileObservation = observationsForDay.sort(compareObservations)[0];
 
   let mostFertileStamp = stamp(mostFertileObservation, observationsByDay);
@@ -62,6 +69,10 @@ function infoForDay (observations: Observation[], dateTime: DateTime, large: boo
   });
 
   let direction: Direction = "none";
+  let tempString = `${temperature?.toLocaleString()}°`;
+  if (!temperature) {
+    tempString = "-";
+  }
   const observationsForYesterday = observationsByDay[dateTime.minus({ days: 1 }).toISODate()];
   if (observationsForYesterday?.length) {
     const yesterdayMostFertileObservation = observationsForYesterday.sort(compareObservations)[0];
@@ -71,6 +82,19 @@ function infoForDay (observations: Observation[], dateTime: DateTime, large: boo
     } else if (comparison > 10) {
       direction = "down";
     }
+
+    if (temperature) {
+      let yesterdayTemperature: number | undefined = Math.max(...observationsForYesterday
+        .map((observation) => observation.temperature ?? 0));
+      if (yesterdayTemperature === 0 || isNaN(yesterdayTemperature)) {
+        yesterdayTemperature = undefined;
+      }
+      if (yesterdayTemperature && yesterdayTemperature < temperature) {
+        tempString += "+";
+      } else if (yesterdayTemperature && yesterdayTemperature > temperature) {
+        tempString += "-";
+      }
+    }
   }
 
   return {
@@ -79,6 +103,7 @@ function infoForDay (observations: Observation[], dateTime: DateTime, large: boo
     abbreviation: mostFertileAbbreviation,
     times,
     direction,
+    temperature: tempString,
   };
 }
 
