@@ -30,7 +30,7 @@ function Observations (): JSX.Element {
           ? <div class='loading' />
           : (
               <>
-                <NewObservation setObservations={setObservations} observations={observations()} />
+                <NewObservation />
                 <For
                   each={observations()}
                   fallback={<h2>No observations yet.</h2>}
