@@ -9,6 +9,7 @@ import { Observation } from "../types/ObservationTypes";
 import ExistingObservation from "../components/ExistingObservation";
 import Html2PdfStore from "../stores/Html2PdfStore";
 import { Html2PdfOptions } from "html2pdf.js";
+import throwError from "../functions/throwError";
 
 const JS_PDF_OPTIONS = {
   unit: "in",
@@ -50,7 +51,7 @@ function Chart (): JSX.Element {
             },
           })
           .save("chart.pdf"))
-        .catch((error) => console.error(error));
+        .catch(throwError);
     }
   };
 

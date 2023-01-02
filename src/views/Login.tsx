@@ -1,5 +1,6 @@
 import { createSignal, JSX } from "solid-js";
 import Parse from "parse";
+import throwError from "../functions/throwError";
 
 function Login (): JSX.Element {
   const [password, setPassword] = createSignal("");
@@ -9,7 +10,7 @@ function Login (): JSX.Element {
         e.preventDefault();
         Parse.User.logIn("admin", password())
           .then(() => { window.location.href = "/observations"; })
-          .catch((e) => console.error(e));
+          .catch(throwError);
       }}
       action="https://creighton.b4a.app/login"
     >

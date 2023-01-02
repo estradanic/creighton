@@ -2,6 +2,7 @@ import "./App.css";
 import { JSX, lazy, onMount } from "solid-js";
 import { Routes, Route, Link } from "@solidjs/router";
 import Parse from "parse";
+import throwError from "./functions/throwError";
 
 const Observations = lazy(async () => await import("./views/Observations"));
 const Login = lazy(async () => await import("./views/Login"));
@@ -38,9 +39,7 @@ function App (): JSX.Element {
         <Link
           href="#"
           onClick={() => {
-            Parse.User.logOut().catch((e) => {
-              console.error(e);
-            });
+            Parse.User.logOut().catch(throwError);
           }}
         >
           Logout

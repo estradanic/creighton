@@ -28,14 +28,11 @@ import {
 import CoverageField from "./Fields/CoverageField";
 import PmsField from "./Fields/PmsField";
 import TemperatureField from "./Fields/TemperatureField";
+import ObservationsStore from "../stores/ObservationsStore";
+import throwError from "../functions/throwError";
 
-export type NewObservationProps = {
-  observations: Observation[]
-  setObservations: Setter<Observation[]>
-};
-
-function NewObservation (_props: NewObservationProps): JSX.Element {
-  const props = mergeProps({ observations: [] }, _props);
+function NewObservation (): JSX.Element {
+  const { observations, setObservations, setLoading } = ObservationsStore();
   const [datetime, setDatetime] = createSignal(DateTime.now());
   const [menstruation, setMenstruation] = createSignal<Menstruation>("none");
   const [color, setColor] = createSignal<Color>("na");
@@ -84,11 +81,10 @@ function NewObservation (_props: NewObservationProps): JSX.Element {
     setTemperature(undefined);
   };
 
-  const observationsSet = (prev: Observation[]): Observation[] => [...prev, thisObservation()];
-
   const save = (savedObservation: Parse.Object): void => {
     setId(savedObservation.id);
-    props.setObservations(observationsSet);
+    setObservations((prev: Observation[]): Observation[] => [...prev, thisObservation()]
+      .sort((a, b) => b.datetime.localeCompare(a.datetime)));
     initialize();
   };
 
@@ -109,15 +105,14 @@ function NewObservation (_props: NewObservationProps): JSX.Element {
       pms: pms(),
       temperature: temperature(),
     });
+    setLoading(true);
     observation.save()
       .then(save)
-      .catch((e) => {
-        alert(e?.message);
-        console.error(e);
-      });
+      .catch(throwError)
+      .finally(() => setLoading(false));
   };
 
-  const _byDay = createMemo(() => byDay(props.observations));
+  const _byDay = createMemo(() => byDay(observations()));
   const _cycleDay = createMemo(() => cycleDay(thisObservation(), _byDay()));
   const _stamp = createMemo(() => `stamp ${stamp(thisObservation(), _byDay())}`);
   const _abbreviation = createMemo(() => abbreviation(thisObservation()));

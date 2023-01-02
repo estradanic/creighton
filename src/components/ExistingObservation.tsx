@@ -29,11 +29,12 @@ import CoverageField from "./Fields/CoverageField";
 import PmsField from "./Fields/PmsField";
 import TemperatureField from "./Fields/TemperatureField";
 import ObservationsStore from "../stores/ObservationsStore";
+import throwError from "../functions/throwError";
 
 export type ExistingObservationProps = Observation & { style?: JSX.CSSProperties };
 
 function ExistingObservation (props: ExistingObservationProps): JSX.Element {
-  const { observations, setObservations } = ObservationsStore();
+  const { observations, setObservations, setLoading } = ObservationsStore();
   const [disabled, setDisabled] = createSignal(true);
   const [datetime, setDatetime] = createSignal(DateTime.now());
   const [menstruation, setMenstruation] = createSignal<Menstruation>("none");
@@ -83,9 +84,6 @@ function ExistingObservation (props: ExistingObservationProps): JSX.Element {
     };
   };
 
-  const observationsSet = (prev: Observation[]): Observation[] =>
-    [...prev.filter((o) => o.id !== props.id), thisObservation()];
-
   const save = async (observation: Parse.Object): Promise<void> => {
     await observation.save({
       sensation: sensation(),
@@ -101,19 +99,21 @@ function ExistingObservation (props: ExistingObservationProps): JSX.Element {
       pms: pms(),
       temperature: temperature(),
     });
-    setObservations(observationsSet);
+    setObservations((prev) => [...prev.filter((o) => o.id !== props.id), thisObservation()]
+      .sort((a, b) => b.datetime.localeCompare(a.datetime)));
   };
 
   const onEditSubmit = (e: Event): void => {
     e.preventDefault();
     setDisabled(true);
+    setLoading(true);
     new Parse.Query("observation").get(props.id)
       .then(save)
       .catch((e) => {
-        console.error(e);
-        alert(e?.message);
+        throwError(e);
         setDisabled(false);
-      });
+      })
+      .finally(() => setLoading(false));
   };
 
   const destroy = async (observation: Parse.Object): Promise<void> => {
@@ -124,13 +124,14 @@ function ExistingObservation (props: ExistingObservationProps): JSX.Element {
   const deleteObservation = (e: Event): void => {
     e.preventDefault();
     setDisabled(true);
+    setLoading(true);
     new Parse.Query("observation").get(props.id)
       .then(destroy)
       .catch((e) => {
-        alert(e?.message);
-        console.error(e);
+        throwError(e);
         setDisabled(false);
-      });
+      })
+      .finally(() => setLoading(false));
   };
 
   const _byDay = createMemo(() => byDay(observations()));
