@@ -32,7 +32,9 @@ import ObservationsStore from "../stores/ObservationsStore";
 import throwError from "../functions/throwError";
 
 function NewObservation (): JSX.Element {
-  const { observations, setObservations, setLoading } = ObservationsStore();
+  const { observations, setObservations } = ObservationsStore();
+  const [oldObservations, setOldObservations] = createSignal<Observation[]>(observations());
+
   const [datetime, setDatetime] = createSignal(DateTime.now());
   const [menstruation, setMenstruation] = createSignal<Menstruation>("none");
   const [color, setColor] = createSignal<Color>("na");
@@ -83,9 +85,12 @@ function NewObservation (): JSX.Element {
 
   const save = (savedObservation: Parse.Object): void => {
     setId(savedObservation.id);
-    setObservations((prev: Observation[]): Observation[] => [...prev, thisObservation()]
-      .sort((a, b) => b.datetime.localeCompare(a.datetime)));
+    setObservations((prev) => [
+      ...prev.filter((o) => !!o.id),
+      thisObservation()
+    ].sort((a, b) => b.datetime.localeCompare(a.datetime)));
     initialize();
+    setOldObservations(observations());
   };
 
   const onSubmit = (e: Event): void => {
@@ -105,11 +110,13 @@ function NewObservation (): JSX.Element {
       pms: pms(),
       temperature: temperature(),
     });
-    setLoading(true);
+    setObservations((prev) => [...prev, thisObservation()].sort((a, b) => b.datetime.localeCompare(a.datetime)));
     observation.save()
       .then(save)
-      .catch(throwError)
-      .finally(() => setLoading(false));
+      .catch((e) => {
+        throwError(e);
+        setObservations(oldObservations());
+      })
   };
 
   const _byDay = createMemo(() => byDay(observations()));
