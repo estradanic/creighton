@@ -48,6 +48,7 @@ function NewObservation (): JSX.Element {
   const [pms, setPms] = createSignal<boolean>(false);
   const [coverage, setCoverage] = createSignal<Coverage>("na");
   const [temperature, setTemperature] = createSignal<number | undefined>(undefined);
+  const [disabled, setDisabled] = createSignal<boolean>(false);
 
   const thisObservation = (): Observation => {
     return {
@@ -95,6 +96,7 @@ function NewObservation (): JSX.Element {
 
   const onSubmit = (e: Event): void => {
     e.preventDefault();
+    setDisabled(true);
     const observation = new Parse.Object("observation");
     observation.set({
       sensation: sensation(),
@@ -114,9 +116,10 @@ function NewObservation (): JSX.Element {
     observation.save()
       .then(save)
       .catch((e) => {
-        throwError(e);
         setObservations(oldObservations());
+        throwError(e);
       })
+      .finally(() => setDisabled(false));
   };
 
   const _byDay = createMemo(() => byDay(observations()));
@@ -135,25 +138,27 @@ function NewObservation (): JSX.Element {
         {_abbreviation()}
       </h3>
       <form onSubmit={onSubmit}>
-        <MenstruationField menstruation={menstruation()} setMenstruation={setMenstruation} />
-        <SensationField sensation={sensation()} setSensation={setSensation} />
-        <AppearanceField appearance={appearance()} setAppearance={setAppearance} />
-        <ColorField color={color()} setColor={setColor} />
+        <MenstruationField menstruation={menstruation()} setMenstruation={setMenstruation} disabled={disabled()} />
+        <SensationField sensation={sensation()} setSensation={setSensation} disabled={disabled()} />
+        <AppearanceField appearance={appearance()} setAppearance={setAppearance} disabled={disabled()} />
+        <ColorField color={color()} setColor={setColor} disabled={disabled()} />
         <StretchabilityField
           stretchability={stretchability()}
           setStretchability={setStretchability}
+          disabled={disabled()}
         />
-        <ConsistencyField consistency={consistency()} setConsistency={setConsistency} />
-        <DatetimeField datetime={datetime()} setDatetime={setDatetime} />
-        <CoverageField coverage={coverage()} setCoverage={setCoverage} />
+        <ConsistencyField consistency={consistency()} setConsistency={setConsistency} disabled={disabled()} />
+        <DatetimeField datetime={datetime()} setDatetime={setDatetime} disabled={disabled()} />
+        <CoverageField coverage={coverage()} setCoverage={setCoverage} disabled={disabled()} />
         <YellowOverrideField
           yellowOverride={yellowOverride()}
           setYellowOverride={setYellowOverride}
+          disabled={disabled()}
         />
-        <PmsField pms={pms()} setPms={setPms} />
-        <TemperatureField temperature={temperature()} setTemperature={setTemperature} />
-        <NotesField notes={notes()} setNotes={setNotes} />
-        <Submit disabled={_submitDisabled()} />
+        <PmsField pms={pms()} setPms={setPms} disabled={disabled()} />
+        <TemperatureField temperature={temperature()} setTemperature={setTemperature} disabled={disabled()} />
+        <NotesField notes={notes()} setNotes={setNotes} disabled={disabled()} />
+        <Submit disabled={_submitDisabled() || disabled()} />
       </form>
     </div>
 
