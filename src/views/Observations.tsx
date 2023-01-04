@@ -3,10 +3,9 @@ import { DateTime } from "luxon";
 import ExistingObservation from "../components/ExistingObservation";
 import NewObservation from "../components/NewObservation";
 import infoForDay from "../functions/infoForDay";
-import ObservationsStore from "../stores/ObservationsStore";
+import { observations, loading } from "../stores/ObservationsStore";
 
 function Observations (): JSX.Element {
-  const { observations, loading, setObservations } = ObservationsStore();
   const todaysInfo = createMemo(() => infoForDay(observations(), DateTime.now()));
   return (
     <>

@@ -3,11 +3,11 @@ import { DateTime } from "luxon";
 import byCycle from "../functions/byCycle";
 import byDay from "../functions/byDay";
 import infoForDay from "../functions/infoForDay";
-import ObservationsStore from "../stores/ObservationsStore";
+import { observations, loading } from "../stores/ObservationsStore";
 import Dialog from "../components/Dialog";
 import { Observation } from "../types/ObservationTypes";
 import ExistingObservation from "../components/ExistingObservation";
-import Html2PdfStore from "../stores/Html2PdfStore";
+import html2pdf from "../stores/Html2PdfStore";
 import { Html2PdfOptions } from "html2pdf.js";
 import throwError from "../functions/throwError";
 
@@ -26,7 +26,6 @@ const HTML_2_PDF_OPTIONS = {
 } satisfies Html2PdfOptions;
 
 function Chart (): JSX.Element {
-  const { observations, loading } = ObservationsStore();
   const [observationsDialogIsOpen, setObservationsDialogIsOpen] = createSignal(false);
   const [openObservations, setOpenObservations] = createSignal<Observation[]>([]);
   const _byDay = createMemo(() => byDay(observations()));
@@ -37,7 +36,7 @@ function Chart (): JSX.Element {
     e.preventDefault();
     const chart = document.querySelector(".chart-container");
     if (chart) {
-      Html2PdfStore()
+      html2pdf()
         .then((html2pdf) => html2pdf()
           .from(chart)
           .set({

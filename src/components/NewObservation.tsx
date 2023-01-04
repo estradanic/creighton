@@ -28,11 +28,10 @@ import {
 import CoverageField from "./Fields/CoverageField";
 import PmsField from "./Fields/PmsField";
 import TemperatureField from "./Fields/TemperatureField";
-import ObservationsStore from "../stores/ObservationsStore";
+import { observations, setObservations } from "../stores/ObservationsStore";
 import throwError from "../functions/throwError";
 
 function NewObservation (): JSX.Element {
-  const { observations, setObservations } = ObservationsStore();
   const [oldObservations, setOldObservations] = createSignal<Observation[]>(observations());
 
   const [datetime, setDatetime] = createSignal(DateTime.now());

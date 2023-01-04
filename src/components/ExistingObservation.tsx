@@ -28,13 +28,12 @@ import {
 import CoverageField from "./Fields/CoverageField";
 import PmsField from "./Fields/PmsField";
 import TemperatureField from "./Fields/TemperatureField";
-import ObservationsStore from "../stores/ObservationsStore";
+import { observations, setObservations } from "../stores/ObservationsStore";
 import throwError from "../functions/throwError";
 
 export type ExistingObservationProps = Observation & { style?: JSX.CSSProperties };
 
 function ExistingObservation (props: ExistingObservationProps): JSX.Element {
-  const { observations, setObservations } = ObservationsStore();
   const [oldObservations, setOldObservations] = createSignal<Observation[]>(observations());
 
   const [disabled, setDisabled] = createSignal(true);

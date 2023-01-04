@@ -1,37 +1,31 @@
-import { Accessor, createSignal, onMount, Setter } from "solid-js";
+import { createSignal } from "solid-js";
 import Parse from "parse";
 import { Observation } from "../types/ObservationTypes";
 import throwError from "../functions/throwError";
 
-const [observations, setObservations] = createSignal<Observation[]>([]);
-const [loading, setLoading] = createSignal(true);
+const [_observations, _setObservations] = createSignal<Observation[]>([]);
+const [_loading, setLoading] = createSignal(false);
+const [gotObservations, setGotObservations] = createSignal(false);
 
-export type ObservationsStoreReturn = {
-  observations: Accessor<Observation[]>
-  loading: Accessor<boolean>
-  setObservations: Setter<Observation[]>
-  setLoading: Setter<boolean>
-};
-
-const ObservationsStore = (): ObservationsStoreReturn => {
-  onMount(() => {
-    if (!observations()?.length) {
-      new Parse.Query<Parse.Object<Observation>>("observation")
+export const observations = (): Observation[] => {
+  if (!loading() && !gotObservations()) {
+    setLoading(true);
+    new Parse.Query<Parse.Object<Observation>>("observation")
         .descending("datetime")
         .limit(500)
         .find()
         .then((results) => setObservations(results.map((result) => ({ ...result.attributes, id: result.id }))))
         .catch(throwError)
-        .finally(() => setLoading(false));
-    }
-  });
-
-  return {
-    observations,
-    loading,
-    setObservations,
-    setLoading,
-  };
+        .finally(() => {
+          setGotObservations(true);
+          setLoading(false);
+        });
+  }
+  return _observations();
 };
 
-export default ObservationsStore;
+export const loading = _loading;
+export const setObservations = _setObservations;
+export function refresh (): void {
+  setGotObservations(false);
+}
