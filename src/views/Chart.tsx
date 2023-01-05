@@ -2,7 +2,7 @@ import { createMemo, createSignal, For, Index, JSX } from "solid-js";
 import { DateTime } from "luxon";
 import byCycle from "../functions/byCycle";
 import byDay from "../functions/byDay";
-import infoForDay from "../functions/infoForDay";
+import infoForDay, { Info } from "../functions/infoForDay";
 import { observations, loading } from "../stores/ObservationsStore";
 import Dialog from "../components/Dialog";
 import { Observation } from "../types/ObservationTypes";
@@ -10,6 +10,9 @@ import ExistingObservation from "../components/ExistingObservation";
 import html2pdf from "../stores/Html2PdfStore";
 import { Html2PdfOptions } from "html2pdf.js";
 import throwError from "../functions/throwError";
+import mucusScore from "../functions/mucusScore";
+import postPeakDays from "../functions/postPeakDays";
+import findPeakDay from "../functions/findPeakDay";
 
 const JS_PDF_OPTIONS = {
   unit: "in",
@@ -24,6 +27,79 @@ const HTML_2_PDF_OPTIONS = {
   html2canvas: HTML_2_CANVAS_OPTIONS,
   jsPDF: JS_PDF_OPTIONS,
 } satisfies Html2PdfOptions;
+
+type ChartCellProps = {
+  day: string
+  dayInfo: Info
+  openDialog: (observations: Observation[]) => void
+  isPeakDay: boolean
+};
+
+function ChartCell (props: ChartCellProps): JSX.Element {
+  const dayDateTime = (): DateTime => DateTime.fromISO(props.day);
+  return (
+    <td
+      onClick={() => props.openDialog(observations()
+        .filter((observation) =>
+          DateTime.fromISO(observation.datetime).hasSame(dayDateTime(), "day"))
+        .sort((a, b) => a.datetime.localeCompare(b.datetime)))}
+      class={`clickable ${props.isPeakDay ? "peak-day" : ""}`}
+    >
+      <span class="chart-element">{DateTime.fromISO(props.day).toFormat("MM/dd")}</span>
+      <br />
+      <strong class="chart-element temperature">
+        {props.dayInfo.temperature}
+      </strong>
+      <br />
+      <span class={`stamp ${props.dayInfo.stamp} chart-element`}>&nbsp;&nbsp;&nbsp;</span>
+      <br />
+      <span class="chart-abbreviation chart-element">{props.dayInfo.abbreviation}</span>
+      <br />
+      <i class="chart-element">{props.dayInfo.times > 0 ? `x${props.dayInfo.times}` : <br />}</i>
+      <span class={`direction ${props.dayInfo.direction}`} />
+    </td>
+  );
+}
+
+type ChartRowProps = {
+  cycle: Record<string, Observation[]>
+  openDialog: (observations: Observation[]) => void
+};
+
+function ChartRow (props: ChartRowProps): JSX.Element {
+  const dayInfos = createMemo(() => Object.keys(props.cycle).reduce<Record<string, Info>>((acc, day) => {
+    acc[day] = infoForDay(observations(), DateTime.fromISO(day));
+    return acc;
+  }, {}));
+
+  const actualPeakDay = createMemo(() => findPeakDay(dayInfos()));
+  const _mucusScore = createMemo(() => mucusScore(dayInfos(), actualPeakDay()));
+  const _postPeakDays = createMemo(() => postPeakDays(props.cycle, actualPeakDay()));
+
+  return (
+    <tr>
+      <For
+        each={Object.keys(props.cycle)}
+        children={(day) => (
+          <ChartCell
+            dayInfo={dayInfos()[day]}
+            day={day}
+            openDialog={props.openDialog}
+            isPeakDay={actualPeakDay() === day}
+          />
+        )}
+      />
+      {
+        actualPeakDay() &&
+          <td class="chart-metadata">
+            <span class="chart-element"><strong>MSC:</strong> {_mucusScore()}</span>
+            <br />
+            <span class="chart-element"><strong>PPD:</strong> {_postPeakDays()}</span>
+          </td>
+      }
+    </tr>
+  );
+}
 
 function Chart (): JSX.Element {
   const [observationsDialogIsOpen, setObservationsDialogIsOpen] = createSignal(false);
@@ -49,7 +125,7 @@ function Chart (): JSX.Element {
               height: chart.scrollHeight,
             },
           })
-          .save("chart.pdf"))
+          .save(`creighton_chart_${DateTime.now().toUnixInteger()}.pdf`))
         .catch(throwError);
     }
   };
@@ -89,39 +165,7 @@ function Chart (): JSX.Element {
                   <tbody>
                     <For
                       each={_byCycle()}
-                      children={(cycle) => (
-                        <tr>
-                          <For
-                            each={Object.keys(cycle)}
-                            children={(day) => {
-                              const dayDateTime = DateTime.fromISO(day);
-                              const dayInfo = createMemo(() => infoForDay(observations(), dayDateTime));
-                              return (
-                                <td
-                                  onClick={() => openDialog(observations()
-                                    .filter((observation) =>
-                                      DateTime.fromISO(observation.datetime).hasSame(dayDateTime, "day"))
-                                    .sort((a, b) => a.datetime.localeCompare(b.datetime)))}
-                                  class="clickable"
-                                >
-                                  <span class="chart-element">{DateTime.fromISO(day).toFormat("MM/dd")}</span>
-                                  <br />
-                                  <strong class="chart-element temperature">
-                                    {dayInfo().temperature}
-                                  </strong>
-                                  <br />
-                                  <span class={`stamp ${dayInfo().stamp} chart-element`}>&nbsp;&nbsp;&nbsp;</span>
-                                  <br />
-                                  <span class="chart-abbreviation chart-element">{dayInfo().abbreviation}</span>
-                                  <br />
-                                  <i class="chart-element">{dayInfo().times > 0 ? `x${dayInfo().times}` : <br />}</i>
-                                  <span class={`direction ${dayInfo().direction}`} />
-                                </td>
-                              );
-                            }}
-                          />
-                        </tr>
-                      )}
+                      children={(cycle) => (<ChartRow cycle={cycle} openDialog={openDialog} />)}
                     />
                   </tbody>
                 </table>

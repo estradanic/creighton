@@ -1,9 +1,9 @@
 import { Observation } from "../types/ObservationTypes";
 
 /** Function to get the abbreviation for an observation */
-const abbreviation = (observation: Observation): string => {
+const abbreviation = (observation: Observation, observationsForDay: Observation[] = []): string => {
   const { menstruation, color, sensation, stretchability, consistency, appearance } = observation;
-  const abbreviation = ["", "", "", "", "", "", ""];
+  let abbreviation = ["", "", "", "", "", "", ""];
   if (menstruation === "very-light") {
     abbreviation[0] = "VL";
   } else if (menstruation === "light") {
@@ -49,18 +49,30 @@ const abbreviation = (observation: Observation): string => {
   } else if (stretchability === "stretchy") {
     abbreviation[2] = "10";
   }
-  if (color === "brown") {
-    abbreviation[4] = "B";
-  } else if (color === "cloudy-white") {
-    abbreviation[4] = "C";
-  } else if (color === "cloudy-clear") {
-    abbreviation[4] = "C/K";
-  } else if (color === "clear") {
-    abbreviation[4] = "K";
-  } else if (color === "yellow") {
-    abbreviation[4] = "Y";
-  } else if (color === "red") {
-    abbreviation[4] = "R";
+  let zeroAllDay = observationsForDay.length > 0;
+  for (const o of observationsForDay) {
+    if (o.stretchability !== "none" || o.appearance !== "dry" || o.sensation !== "dry") {
+      zeroAllDay = false;
+    }
+  }
+  if (zeroAllDay) {
+    abbreviation[2] = "0AD";
+  }
+
+  if (stretchability !== "none") {
+    if (color === "brown") {
+      abbreviation[4] = "B";
+    } else if (color === "cloudy-white") {
+      abbreviation[4] = "C";
+    } else if (color === "cloudy-clear") {
+      abbreviation[4] = "C/K";
+    } else if (color === "clear") {
+      abbreviation[4] = "K";
+    } else if (color === "yellow") {
+      abbreviation[4] = "Y";
+    } else if (color === "red") {
+      abbreviation[4] = "R";
+    }
   }
   if (consistency === "gummy") {
     abbreviation[5] = "G";
@@ -70,6 +82,41 @@ const abbreviation = (observation: Observation): string => {
   if (sensation === "lubricative") {
     abbreviation[6] = "L";
   }
+
+  if (abbreviation[0] === "") {
+    for (const o of observationsForDay) {
+      if (o.menstruation === "very-light") {
+        abbreviation[0] = "VL";
+      } else if (o.menstruation === "light") {
+        abbreviation[0] = "L";
+      } else if (o.menstruation === "medium") {
+        abbreviation[0] = "M";
+      } else if (o.menstruation === "heavy") {
+        abbreviation[0] = "H";
+      } else if (o.menstruation === "very-heavy") {
+        abbreviation[0] = "VH";
+      }
+      if (o.menstruation !== "none") {
+        abbreviation[1] = " ";
+        if (o.color === "red") {
+          abbreviation[1] = "R ";
+        } else if (o.color === "brown") {
+          abbreviation[1] = "B ";
+        }
+      } else {
+        abbreviation[1] = " ";
+      }
+    }
+  }
+
+  if ((color === "red" || color === "brown") && menstruation === "none") {
+    abbreviation[0] = "VL";
+  }
+
+  if (abbreviation[0] === "VH" || abbreviation[0] === "H" || abbreviation[0] === "M") {
+    abbreviation = [abbreviation[0], abbreviation[1]];
+  }
+
   return abbreviation.join("");
 };
 

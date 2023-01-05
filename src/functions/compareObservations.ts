@@ -78,8 +78,8 @@ function compareOnDetails (a: Observation, b: Observation): number {
   return bScore - aScore;
 }
 
-/** Function to compare observations by fertility */
-function compareObservations (a: Observation, b: Observation): number {
+/** Function to compare observations by fertility, menstruation and yellow stamp override */
+export function compareObservationsForStamp (a: Observation, b: Observation): number {
   if (a.yellowOverride === b.yellowOverride) {
     if ((isMenstruation(a) && isMenstruation(b)) || (!isMenstruation(a) && !isMenstruation(b))) {
       if ((isPeakMucus(a) && isPeakMucus(b)) || (!isPeakMucus(a) && !isPeakMucus(b))) {
@@ -102,4 +102,14 @@ function compareObservations (a: Observation, b: Observation): number {
   return compareOnDetails(a, b);
 }
 
-export default compareObservations;
+/** Function to compare observations by fertility, menstruation and yellow stamp do not override */
+export function compareObservationsForAbbreviation (a: Observation, b: Observation): number {
+  if ((isPeakMucus(a) && isPeakMucus(b)) || (!isPeakMucus(a) && !isPeakMucus(b))) {
+    return compareOnDetails(a, b);
+  } else if (isPeakMucus(a)) {
+    return -1;
+  } else if (isPeakMucus(b)) {
+    return 1;
+  }
+  return compareOnDetails(a, b);
+}

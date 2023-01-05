@@ -4,7 +4,11 @@ import stamp from "./stamp";
 import byDay from "./byDay";
 import abbreviation from "./abbreviation";
 import getCycleDay from "./cycleDay";
-import compareObservations, { blurryCompareObservations } from "./compareObservations";
+import {
+  compareObservationsForAbbreviation,
+  compareObservationsForStamp,
+  blurryCompareObservations,
+} from "./compareObservations";
 
 export type Info = {
   stamp: string
@@ -48,21 +52,22 @@ function infoForDay (observations: Observation[], dateTime: DateTime, large: boo
     temperature = undefined;
   }
 
-  const mostFertileObservation = observationsForDay.sort(compareObservations)[0];
+  const mostFertileObservationForStamp = observationsForDay.sort(compareObservationsForStamp)[0];
+  const mostFertileObservationForAbbreviation = observationsForDay.sort(compareObservationsForAbbreviation)[0];
 
-  let mostFertileStamp = stamp(mostFertileObservation, observationsByDay);
+  let mostFertileStamp = stamp(mostFertileObservationForStamp, observationsByDay);
   if (mostFertileStamp.includes("p-plus") && large) {
     mostFertileStamp += " p-plus-large";
   }
 
-  const mostFertileAbbreviation = abbreviation(mostFertileObservation);
+  const mostFertileAbbreviation = abbreviation(mostFertileObservationForAbbreviation, observationsForDay);
 
   let times = 1;
   observationsForDay.forEach((observation) => {
-    if (observation.id === mostFertileObservation.id) {
+    if (observation.id === mostFertileObservationForStamp.id) {
       return;
     }
-    const _abbreviation = abbreviation(observation);
+    const _abbreviation = abbreviation(observation, observationsForDay);
     if (_abbreviation === mostFertileAbbreviation) {
       times += 1;
     }
@@ -75,8 +80,11 @@ function infoForDay (observations: Observation[], dateTime: DateTime, large: boo
   }
   const observationsForYesterday = observationsByDay[dateTime.minus({ days: 1 }).toISODate()];
   if (observationsForYesterday?.length) {
-    const yesterdayMostFertileObservation = observationsForYesterday.sort(compareObservations)[0];
-    const comparison = blurryCompareObservations(mostFertileObservation, yesterdayMostFertileObservation);
+    const yesterdayMostFertileObservation = observationsForYesterday.sort(compareObservationsForAbbreviation)[0];
+    const comparison = blurryCompareObservations(
+      mostFertileObservationForAbbreviation,
+      yesterdayMostFertileObservation,
+    );
     if (comparison < -10) {
       direction = "up";
     } else if (comparison > 10) {

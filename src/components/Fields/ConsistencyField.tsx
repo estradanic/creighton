@@ -26,8 +26,9 @@ function ConsistencyField (_props: ConsistencyFieldProps): JSX.Element {
       >
         <option value="na">Not Applicable (Couldn't pick up)</option>
         <option value="stringy">Stringy (Stretched into a thin thread)</option>
-        <option value="pasty">Pasty (Creamy)</option>
-        <option value="gummy">Gummy (Gluey)</option>
+        <option value="ropey">Ropey (Stretched, but not a thin thread)</option>
+        <option value="pasty">Pasty (Creamy, like actual lotion)</option>
+        <option value="gummy">Gummy (Gluey, like actual glue)</option>
       </select>
     </>
   );

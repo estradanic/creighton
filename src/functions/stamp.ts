@@ -1,6 +1,6 @@
 import { DateTime } from "luxon";
 import { Observation } from "../types/ObservationTypes";
-import { isMenstruation, isFertile, isPeakMucus } from "./assertions";
+import { isMenstruation, isFertile, isPeakMucus, isThreeDaysOfNonPeakMucus } from "./assertions";
 
 /** Function to get the stamp css classes for an observation, given the context of the observations by day */
 const stamp = (observation: Observation, observationsByDay: Record<string, Observation[]>): string => {
@@ -14,37 +14,52 @@ const stamp = (observation: Observation, observationsByDay: Record<string, Obser
     stamp = "yellow";
   } else if (isMenstruation(observation) || observation.color === "red" || observation.color === "brown") {
     stamp = "red";
+    if (observation.menstruation === "heavy" || observation.menstruation === "very-heavy" ||
+        observation.menstruation === "medium") {
+      return stamp;
+    }
   } else if (isFertile(observation)) {
     stamp = "white";
   } else {
     stamp = "green";
   }
-  if (!isPeakMucus(observation)) {
-    for (const curObservation of observationsByDay[dayBefore] ?? []) {
-      if (isPeakMucus(curObservation)) {
-        if (stamp === "green") {
-          stamp = "green-baby p-plus-one p-plus";
-        } else {
-          stamp += " p-plus-one p-plus";
+  if (!isPeakMucus(observation) || observation.yellowOverride) {
+    if (observationsByDay[dayBefore]?.length &&
+        observationsByDay[dayBefore].filter((o) => o.yellowOverride).length === 0) {
+      for (const curObservation of observationsByDay[dayBefore] ?? []) {
+        if (isPeakMucus(curObservation) || isThreeDaysOfNonPeakMucus(curObservation, observationsByDay)) {
+          if (stamp === "green") {
+            stamp = "green-baby p-plus-one p-plus";
+          } else if (stamp === "yellow") {
+            stamp = "yellow-baby p-plus-one p-plus";
+          } else {
+            stamp += " p-plus-one p-plus";
+          }
         }
       }
     }
-    if (!stamp.includes("p-plus-one")) {
+    if (!stamp.includes("p-plus-one") && observationsByDay[secondDayBefore]?.length &&
+        observationsByDay[secondDayBefore].filter((o) => o.yellowOverride).length === 0) {
       for (const curObservation of observationsByDay[secondDayBefore] ?? []) {
-        if (isPeakMucus(curObservation)) {
+        if (isPeakMucus(curObservation) || isThreeDaysOfNonPeakMucus(curObservation, observationsByDay)) {
           if (stamp === "green") {
             stamp = "green-baby p-plus-two p-plus";
+          } else if (stamp === "yellow") {
+            stamp = "yellow-baby p-plus-two p-plus";
           } else {
             stamp += " p-plus-two p-plus";
           }
         }
       }
     }
-    if (!stamp.includes("p-plus-one") && !stamp.includes("p-plus-two")) {
+    if (!stamp.includes("p-plus-one") && !stamp.includes("p-plus-two") && observationsByDay[thirdDayBefore]?.length &&
+        observationsByDay[thirdDayBefore].filter((o) => o.yellowOverride).length === 0) {
       for (const curObservation of observationsByDay[thirdDayBefore] ?? []) {
-        if (isPeakMucus(curObservation)) {
+        if (isPeakMucus(curObservation) || isThreeDaysOfNonPeakMucus(curObservation, observationsByDay)) {
           if (stamp === "green") {
             stamp = "green-baby p-plus-three p-plus";
+          } else if (stamp === "yellow") {
+            stamp = "yellow-baby p-plus-three p-plus";
           } else {
             stamp += " p-plus-three p-plus";
           }

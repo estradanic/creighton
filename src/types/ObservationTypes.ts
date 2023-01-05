@@ -1,5 +1,5 @@
 export type Appearance = "dry" | "damp" | "shiny" | "wet";
-export type Consistency = "na" | "stringy" | "pasty" | "gummy";
+export type Consistency = "na" | "stringy" | "ropey" | "pasty" | "gummy";
 export type Sensation = "dry" | "smooth" | "lubricative";
 export type Color = "na" | "clear" | "cloudy-white" | "cloudy-clear" | "yellow" | "brown" | "red";
 export type Stretchability = "none" | "sticky" | "tacky" | "stretchy";
@@ -35,7 +35,8 @@ export const ConsistencyHierarchy: Record<Consistency, number> = {
   na: 0,
   gummy: 0,
   pasty: 0,
-  stringy: 1,
+  ropey: 1,
+  stringy: 2,
 };
 
 export const ConsistencyMultiplier = 3;
