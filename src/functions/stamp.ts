@@ -81,7 +81,7 @@ const stamp = (observation: Observation, observationsByDay: Record<string, Obser
         break;
       }
     }
-    if (!foundPeak) {
+    if (!foundPeak && isPeakMucus(observation)) {
       stamp += " p-plus peak";
     }
   }
