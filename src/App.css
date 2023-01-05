@@ -151,6 +151,10 @@
   background-color: lightgreen;
 }
 
+.intercourse {
+  color: magenta;
+}
+
 @keyframes spinner {
   0% {
     transform: rotate(0deg);
@@ -199,6 +203,7 @@
 .chart-element {
   margin-top: 0.25rem;
   display: inline-block;
+  white-space: nowrap;
 }
 
 .temperature {

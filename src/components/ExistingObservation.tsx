@@ -30,6 +30,7 @@ import PmsField from "./Fields/PmsField";
 import TemperatureField from "./Fields/TemperatureField";
 import { observations, setObservations } from "../stores/ObservationsStore";
 import throwError from "../functions/throwError";
+import IntercourseField from "./Fields/IntercourseField";
 
 export type ExistingObservationProps = Observation & { style?: JSX.CSSProperties };
 
@@ -49,6 +50,7 @@ function ExistingObservation (props: ExistingObservationProps): JSX.Element {
   const [pms, setPms] = createSignal<boolean>(false);
   const [notes, setNotes] = createSignal<string>("");
   const [temperature, setTemperature] = createSignal<number | undefined>(undefined);
+  const [intercourse, setIntercourse] = createSignal<boolean>(false);
 
   const initialize = (): void => {
     setDatetime(DateTime.fromISO(props.datetime));
@@ -63,6 +65,7 @@ function ExistingObservation (props: ExistingObservationProps): JSX.Element {
     setCoverage(props.coverage);
     setPms(props.pms);
     setTemperature(props.temperature);
+    setIntercourse(props.intercourse);
   };
 
   onMount(initialize);
@@ -82,6 +85,7 @@ function ExistingObservation (props: ExistingObservationProps): JSX.Element {
       coverage: coverage(),
       pms: pms(),
       temperature: temperature(),
+      intercourse: intercourse(),
     };
   };
 
@@ -102,6 +106,7 @@ function ExistingObservation (props: ExistingObservationProps): JSX.Element {
       coverage: coverage(),
       pms: pms(),
       temperature: temperature(),
+      intercourse: intercourse(),
     });
     setOldObservations(observations());
   };
@@ -185,6 +190,7 @@ function ExistingObservation (props: ExistingObservationProps): JSX.Element {
           setYellowOverride={setYellowOverride}
         />
         <PmsField disabled={disabled()} pms={pms()} setPms={setPms} />
+        <IntercourseField disabled={disabled()} intercourse={intercourse()} setIntercourse={setIntercourse} />
         <TemperatureField disabled={disabled()} temperature={temperature()} setTemperature={setTemperature} />
         <NotesField disabled={disabled()} notes={notes()} setNotes={setNotes} />
         <Submit disabled={disabled()} />

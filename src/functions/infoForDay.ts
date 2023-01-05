@@ -16,33 +16,32 @@ export type Info = {
   cycleDay: string
   times: number
   direction: Direction
+  pms: boolean
   temperature?: string
+  intercourse: boolean
 };
 
+const DUMMY_INFO = {
+  stamp: "",
+  abbreviation: "??",
+  cycleDay: "??",
+  times: 0,
+  pms: false,
+  intercourse: false,
+  direction: "none",
+} as const;
+
 /**
- * Function to get the most fertile stamp/abbreviation
- * and the cycle day for a set of observations on the same day
+ * Function to get the relevant info for a cycle day
  */
 function infoForDay (observations: Observation[], dateTime: DateTime, large: boolean = true): Info {
   if (!observations || observations.length === 0) {
-    return {
-      stamp: "",
-      abbreviation: "??",
-      cycleDay: "??",
-      times: 0,
-      direction: "none",
-    };
+    return DUMMY_INFO;
   }
   const observationsByDay = byDay(observations);
   const observationsForDay = observationsByDay[dateTime.toISODate()];
   if (!observationsForDay || observationsForDay.length === 0) {
-    return {
-      stamp: "",
-      abbreviation: "??",
-      cycleDay: "??",
-      times: 0,
-      direction: "none",
-    };
+    return DUMMY_INFO;
   }
   const cycleDay = getCycleDay(observationsForDay[0], observationsByDay);
 
@@ -51,6 +50,17 @@ function infoForDay (observations: Observation[], dateTime: DateTime, large: boo
   if (temperature === 0 || isNaN(temperature)) {
     temperature = undefined;
   }
+
+  let pms = false;
+  let intercourse = false;
+  observationsForDay.forEach((observation) => {
+    if (observation.pms) {
+      pms = true;
+    }
+    if (observation.intercourse) {
+      intercourse = true;
+    }
+  });
 
   const mostFertileObservationForStamp = observationsForDay.sort(compareObservationsForStamp)[0];
   const mostFertileObservationForAbbreviation = observationsForDay.sort(compareObservationsForAbbreviation)[0];
@@ -112,6 +122,8 @@ function infoForDay (observations: Observation[], dateTime: DateTime, large: boo
     times,
     direction,
     temperature: tempString,
+    pms,
+    intercourse,
   };
 }
 

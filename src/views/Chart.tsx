@@ -53,10 +53,16 @@ function ChartCell (props: ChartCellProps): JSX.Element {
       <br />
       <span class={`stamp ${props.dayInfo.stamp} chart-element`}>&nbsp;&nbsp;&nbsp;</span>
       <br />
-      <span class="chart-abbreviation chart-element">{props.dayInfo.abbreviation}</span>
+      <span class="chart-element">
+        <span class="chart-abbreviation">{props.dayInfo.abbreviation}</span>
+      </span>
       <br />
-      <i class="chart-element">{props.dayInfo.times > 0 ? `x${props.dayInfo.times}` : <br />}</i>
-      <span class={`direction ${props.dayInfo.direction}`} />
+      <span class="chart-element">
+        <i>{props.dayInfo.times > 0 ? `x${props.dayInfo.times}` : <br />}</i>
+        <span class={`direction ${props.dayInfo.direction}`} />
+        {props.dayInfo.intercourse && <span class="intercourse">🎔</span>}
+        {props.dayInfo.pms && <span>😢</span>}
+      </span>
     </td>
   );
 }
@@ -64,6 +70,7 @@ function ChartCell (props: ChartCellProps): JSX.Element {
 type ChartRowProps = {
   cycle: Record<string, Observation[]>
   openDialog: (observations: Observation[]) => void
+  isComplete: boolean
 };
 
 function ChartRow (props: ChartRowProps): JSX.Element {
@@ -85,12 +92,12 @@ function ChartRow (props: ChartRowProps): JSX.Element {
             dayInfo={dayInfos()[day]}
             day={day}
             openDialog={props.openDialog}
-            isPeakDay={actualPeakDay() === day}
+            isPeakDay={actualPeakDay() === day && props.isComplete}
           />
         )}
       />
       {
-        actualPeakDay() &&
+        actualPeakDay() && props.isComplete &&
           <td class="chart-metadata">
             <span class="chart-element"><strong>MSC:</strong> {_mucusScore()}</span>
             <br />
@@ -165,7 +172,13 @@ function Chart (): JSX.Element {
                   <tbody>
                     <For
                       each={_byCycle()}
-                      children={(cycle) => (<ChartRow cycle={cycle} openDialog={openDialog} />)}
+                      children={(cycle, index) => (
+                        <ChartRow
+                          cycle={cycle}
+                          isComplete={index() + 1 < _byCycle().length}
+                          openDialog={openDialog}
+                        />
+                      )}
                     />
                   </tbody>
                 </table>

@@ -23,7 +23,14 @@ const stamp = (observation: Observation, observationsByDay: Record<string, Obser
   } else {
     stamp = "green";
   }
-  if (!isPeakMucus(observation) || observation.yellowOverride) {
+  let dayHasPeakMucus = false;
+  for (const curObservation of observationsByDay[dateTime.toISODate()] ?? []) {
+    if (isPeakMucus(curObservation)) {
+      dayHasPeakMucus = true;
+      break;
+    }
+  }
+  if (!dayHasPeakMucus || observation.yellowOverride) {
     if (observationsByDay[dayBefore]?.length &&
         observationsByDay[dayBefore].filter((o) => o.yellowOverride).length === 0) {
       for (const curObservation of observationsByDay[dayBefore] ?? []) {

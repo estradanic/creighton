@@ -20,6 +20,7 @@ export type Observation = {
   coverage: Coverage
   pms: boolean
   temperature?: number
+  intercourse: boolean
 };
 
 export const AppearanceHierarchy: Record<Appearance, number> = {

@@ -30,6 +30,7 @@ import PmsField from "./Fields/PmsField";
 import TemperatureField from "./Fields/TemperatureField";
 import { observations, setObservations } from "../stores/ObservationsStore";
 import throwError from "../functions/throwError";
+import IntercourseField from "./Fields/IntercourseField";
 
 function NewObservation (): JSX.Element {
   const [oldObservations, setOldObservations] = createSignal<Observation[]>(observations());
@@ -47,6 +48,7 @@ function NewObservation (): JSX.Element {
   const [pms, setPms] = createSignal<boolean>(false);
   const [coverage, setCoverage] = createSignal<Coverage>("na");
   const [temperature, setTemperature] = createSignal<number | undefined>(undefined);
+  const [intercourse, setIntercourse] = createSignal<boolean>(false);
   const [disabled, setDisabled] = createSignal<boolean>(false);
 
   const thisObservation = (): Observation => {
@@ -64,6 +66,7 @@ function NewObservation (): JSX.Element {
       coverage: coverage(),
       pms: pms(),
       temperature: temperature(),
+      intercourse: intercourse(),
     };
   };
 
@@ -81,6 +84,7 @@ function NewObservation (): JSX.Element {
     setCoverage("na");
     setPms(false);
     setTemperature(undefined);
+    setIntercourse(false);
   };
 
   const save = (savedObservation: Parse.Object): void => {
@@ -111,6 +115,7 @@ function NewObservation (): JSX.Element {
       coverage: coverage(),
       pms: pms(),
       temperature: temperature(),
+      intercourse: intercourse(),
     });
     const _thisObservation = thisObservation();
     const _oldObservations = oldObservations();
@@ -158,6 +163,7 @@ function NewObservation (): JSX.Element {
           disabled={disabled()}
         />
         <PmsField pms={pms()} setPms={setPms} disabled={disabled()} />
+        <IntercourseField intercourse={intercourse()} setIntercourse={setIntercourse} disabled={disabled()} />
         <TemperatureField temperature={temperature()} setTemperature={setTemperature} disabled={disabled()} />
         <NotesField notes={notes()} setNotes={setNotes} disabled={disabled()} />
         <Submit disabled={_submitDisabled() || disabled()} />
