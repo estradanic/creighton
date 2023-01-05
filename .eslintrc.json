@@ -26,10 +26,7 @@
           "objects": "always-multiline",
           "imports": "always-multiline",
           "exports": "always-multiline",
-          "functions": "always-multiline",
-          "enums": "always-multiline",
-          "generics": "always-multiline",
-          "tuples": "always-multiline"
+          "functions": "always-multiline"
         }
       ],
       "@typescript-eslint/restrict-template-expressions": "off",

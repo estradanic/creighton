@@ -86,7 +86,8 @@ function ExistingObservation (props: ExistingObservationProps): JSX.Element {
   };
 
   const save = async (observation: Parse.Object): Promise<void> => {
-    setObservations((prev) => [...prev.filter((o) => o.id !== props.id), thisObservation()]
+    const _thisObservation = thisObservation();
+    setObservations((prev) => [...prev.filter((o) => o.id !== props.id), _thisObservation]
       .sort((a, b) => b.datetime.localeCompare(a.datetime)));
     await observation.save({
       sensation: sensation(),
@@ -108,11 +109,12 @@ function ExistingObservation (props: ExistingObservationProps): JSX.Element {
   const onEditSubmit = (e: Event): void => {
     e.preventDefault();
     setDisabled(true);
+    const _oldObservations = oldObservations();
     new Parse.Query("observation").get(props.id)
       .then(save)
       .catch((e) => {
         throwError(e);
-        setObservations(oldObservations());
+        setObservations(_oldObservations);
         setDisabled(false);
       });
   };
@@ -126,13 +128,14 @@ function ExistingObservation (props: ExistingObservationProps): JSX.Element {
   const deleteObservation = (e: Event): void => {
     e.preventDefault();
     setDisabled(true);
+    const _oldObservations = oldObservations();
     new Parse.Query("observation").get(props.id)
       .then(destroy)
       .catch((e) => {
         throwError(e);
         setDisabled(false);
-        setObservations(oldObservations());
-      })
+        setObservations(_oldObservations);
+      });
   };
 
   const _byDay = createMemo(() => byDay(observations()));

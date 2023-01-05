@@ -1,5 +1,5 @@
 import Parse from "parse";
-import { createMemo, createSignal, JSX, mergeProps, Setter } from "solid-js";
+import { createMemo, createSignal, JSX } from "solid-js";
 import { DateTime } from "luxon";
 import SensationField from "./Fields/SensationField";
 import ColorField from "./Fields/ColorField";
@@ -85,9 +85,10 @@ function NewObservation (): JSX.Element {
 
   const save = (savedObservation: Parse.Object): void => {
     setId(savedObservation.id);
+    const _thisObservation = thisObservation();
     setObservations((prev) => [
       ...prev.filter((o) => !!o.id),
-      thisObservation()
+      _thisObservation,
     ].sort((a, b) => b.datetime.localeCompare(a.datetime)));
     initialize();
     setOldObservations(observations());
@@ -111,11 +112,13 @@ function NewObservation (): JSX.Element {
       pms: pms(),
       temperature: temperature(),
     });
-    setObservations((prev) => [...prev, thisObservation()].sort((a, b) => b.datetime.localeCompare(a.datetime)));
+    const _thisObservation = thisObservation();
+    const _oldObservations = oldObservations();
+    setObservations((prev) => [...prev, _thisObservation].sort((a, b) => b.datetime.localeCompare(a.datetime)));
     observation.save()
       .then(save)
       .catch((e) => {
-        setObservations(oldObservations());
+        setObservations(_oldObservations);
         throwError(e);
       })
       .finally(() => setDisabled(false));

@@ -4,9 +4,12 @@ import ExistingObservation from "../components/ExistingObservation";
 import NewObservation from "../components/NewObservation";
 import infoForDay from "../functions/infoForDay";
 import { observations, loading } from "../stores/ObservationsStore";
+import virtualize from "../functions/virtualize";
 
 function Observations (): JSX.Element {
   const todaysInfo = createMemo(() => infoForDay(observations(), DateTime.now()));
+  const virtualizedObservations = createMemo(() => virtualize(observations(), 10, !loading()));
+
   return (
     <>
       <h2>
@@ -31,7 +34,7 @@ function Observations (): JSX.Element {
               <>
                 <NewObservation />
                 <For
-                  each={observations()}
+                  each={virtualizedObservations()()}
                   fallback={<h2>No observations yet.</h2>}
                   children={(observation) => (
                     <ExistingObservation {...observation} />
