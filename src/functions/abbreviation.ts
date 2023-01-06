@@ -16,15 +16,11 @@ const abbreviation = (observation: Observation, observationsForDay: Observation[
     abbreviation[0] = "VH";
   }
 
-  if (menstruation !== "none") {
-    abbreviation[1] = " ";
-    if (color === "red") {
-      abbreviation[1] = "R ";
-    } else if (color === "brown") {
-      abbreviation[1] = "B ";
-    }
-  } else {
-    abbreviation[1] = " ";
+  abbreviation[1] = " ";
+  if (color === "red") {
+    abbreviation[1] = "R ";
+  } else if (color === "brown") {
+    abbreviation[1] = "B ";
   }
 
   if (stretchability === "none") {
@@ -74,10 +70,12 @@ const abbreviation = (observation: Observation, observationsForDay: Observation[
       abbreviation[4] = "R";
     }
   }
-  if (consistency === "gummy") {
-    abbreviation[5] = "G";
-  } else if (consistency === "pasty") {
-    abbreviation[5] = "P";
+  if (stretchability !== "none" || appearance !== "dry") {
+    if (consistency === "gummy") {
+      abbreviation[5] = "G";
+    } else if (consistency === "pasty") {
+      abbreviation[5] = "P";
+    }
   }
   if (sensation === "lubricative") {
     abbreviation[6] = "L";
@@ -117,7 +115,7 @@ const abbreviation = (observation: Observation, observationsForDay: Observation[
     abbreviation = [abbreviation[0], abbreviation[1]];
   }
 
-  return abbreviation.join("");
+  return abbreviation.join("").trim();
 };
 
 export default abbreviation;

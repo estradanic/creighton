@@ -52,12 +52,12 @@ export const SensationMultiplier = 5;
 
 export const ColorHierarchy: Record<Color, number> = {
   na: 0,
-  yellow: 3,
   "cloudy-white": 1,
-  "cloudy-clear": 2,
+  yellow: 2,
+  "cloudy-clear": 3,
   clear: 4,
-  brown: 5,
-  red: 6,
+  brown: 4,
+  red: 4,
 };
 
 export const ColorMultiplier = 10;

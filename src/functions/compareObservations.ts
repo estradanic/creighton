@@ -61,7 +61,7 @@ export function blurryCompareObservations (a: Observation, b: Observation): numb
   return bScore - aScore;
 }
 
-function compareOnDetails (a: Observation, b: Observation): number {
+export function compareOnDetails (a: Observation, b: Observation): number {
   const aScore = (MenstruationHierarchy[a.menstruation] ?? 0) * MenstruationMultiplier +
     (AppearanceHierarchy[a.appearance] ?? 0) * AppearanceMultiplier +
     (StretchabilityHierarchy[a.stretchability] ?? 0) * StretchabilityMultiplier +
