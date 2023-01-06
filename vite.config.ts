@@ -12,7 +12,6 @@ export default defineConfig({
           parse: ["parse"],
           html2canvas: ["html2canvas"],
           jspdf: ["jspdf"],
-          "es6-promise": ["es6-promise"],
         },
       },
     },
