@@ -226,7 +226,9 @@
 }
 
 .dialog {
-  position: absolute;
+  max-height: 100vh;
+  max-width: 100vw;
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
@@ -255,16 +257,19 @@
 
 @media screen and (max-width: 900px) {
   .dialog-content {
-    max-height: 100vh;
+    transform: none;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     max-width: 100vw;
-    height: 100vh;
-    width: 100vw;
+    max-height: 100vh;
+    overflow-y: auto;
     border: none;
   }
 
   .dialog-content > .observation {
-    margin: 1rem;
-    width: 100%;
+    margin: 1rem 0;
   }
 }
 
