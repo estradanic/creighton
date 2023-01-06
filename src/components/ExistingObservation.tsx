@@ -31,6 +31,7 @@ import TemperatureField from "./Fields/TemperatureField";
 import { observations, setObservations } from "../stores/ObservationsStore";
 import throwError from "../functions/throwError";
 import IntercourseField from "./Fields/IntercourseField";
+import Dialog from "./Dialog";
 
 export type ExistingObservationProps = Observation & { style?: JSX.CSSProperties };
 
@@ -51,6 +52,7 @@ function ExistingObservation (props: ExistingObservationProps): JSX.Element {
   const [notes, setNotes] = createSignal<string>("");
   const [temperature, setTemperature] = createSignal<number | undefined>(undefined);
   const [intercourse, setIntercourse] = createSignal<boolean>(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = createSignal(false);
 
   const initialize = (): void => {
     setDatetime(DateTime.fromISO(props.datetime));
@@ -150,6 +152,21 @@ function ExistingObservation (props: ExistingObservationProps): JSX.Element {
 
   return (
     <div class={`observation ${datetime().weekdayLong}`} style={props.style}>
+      <Dialog isOpen={deleteDialogOpen()} onClose={() => setDeleteDialogOpen(false)} closeButtonText="Cancel">
+        <div style={{ margin: "2rem auto" }}>
+          <h3>Are you sure you want to delete this observation?</h3>
+          <h4>This is permanent and cannot be undone.</h4>
+          <input
+            class="delete"
+            type="button"
+            value="Yes. Delete it."
+            onClick={(e) => {
+              deleteObservation(e);
+              setDeleteDialogOpen(false);
+            }}
+          />
+        </div>
+      </Dialog>
       <h3>Cycle Day: {_cycleDay()}</h3>
       <h3>{datetime().toFormat("EEEE MMM dd, yyyy @ t")}</h3>
       <h3>
@@ -195,7 +212,13 @@ function ExistingObservation (props: ExistingObservationProps): JSX.Element {
         <NotesField disabled={disabled()} notes={notes()} setNotes={setNotes} />
         <Submit disabled={disabled()} />
         <label for="delete" />
-        <input type="button" value="Delete" class="delete" disabled={disabled()} onClick={deleteObservation} />
+        <input
+          type="button"
+          value="Delete"
+          class="delete"
+          disabled={disabled()}
+          onClick={() => setDeleteDialogOpen(true)}
+        />
       </form>
     </div>
   );

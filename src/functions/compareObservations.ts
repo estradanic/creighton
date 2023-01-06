@@ -19,7 +19,7 @@ const LUBRICATIVE_SCORE = 1000;
 const STRETCHY_SCORE = 10;
 const TACKY_SCORE = 8;
 const STICKY_SCORE = 6;
-const CLEAR_RED_BROWN_SCORE = 10;
+const FERTILE_COLOR_SCORE = 10;
 
 export function blurryCompareObservations (a: Observation, b: Observation): number {
   if (a.yellowOverride || b.yellowOverride) {
@@ -51,11 +51,11 @@ export function blurryCompareObservations (a: Observation, b: Observation): numb
   } else if (b.stretchability === "sticky") {
     bScore += STICKY_SCORE;
   }
-  if (a.color === "clear" || a.color === "red" || a.color === "brown") {
-    aScore += CLEAR_RED_BROWN_SCORE;
+  if (a.color === "clear" || a.color === "red" || a.color === "brown" || a.color === "cloudy-clear") {
+    aScore += FERTILE_COLOR_SCORE;
   }
-  if (b.color === "clear" || b.color === "red" || b.color === "brown") {
-    bScore += CLEAR_RED_BROWN_SCORE;
+  if (b.color === "clear" || b.color === "red" || b.color === "brown" || b.color === "cloudy-clear") {
+    bScore += FERTILE_COLOR_SCORE;
   }
 
   return bScore - aScore;
