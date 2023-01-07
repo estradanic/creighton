@@ -834,8 +834,8 @@ color-name@~1.1.4:
 
 colors@^1.4.0:
   version "1.4.0"
-  resolved "https://artifactory.svc.corp.adcinternal.com/artifactory/api/npm/oe-npm/colors/-/colors-1.4.0.tgz#c50491479d4c1bdaed2c9ced32cf7c7dc2360f78"
-  integrity sha1-xQSRR51MG9rtLJztMs98fcI2D3g=
+  resolved "https://registry.yarnpkg.com/colors/-/colors-1.4.0.tgz#c50491479d4c1bdaed2c9ced32cf7c7dc2360f78"
+  integrity sha512-a+UqTh4kgZg/SlGvfbzDHpgRu7AAQOmmqRHJnxhRZICKFUT91brVhNNt58CMWU9PsBbv3PDCZUHbVxuDiH2mtA==
 
 concat-map@0.0.1:
   version "0.0.1"
