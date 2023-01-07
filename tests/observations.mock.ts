@@ -195,6 +195,11 @@ export class OB {
     return this;
   }
 
+  tmp (tmp: number): OB {
+    this.observation.temperature = tmp;
+    return this;
+  }
+
   /** build */
   get _ (): Observation {
     return this.observation;

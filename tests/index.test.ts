@@ -4,6 +4,7 @@ import * as byCycle from "./byCycle.test";
 import * as byDay from "./byDay.test";
 import * as compareObservations from "./compareObservations.test";
 import * as cycleDay from "./cycleDay.test";
+import * as findPeakDay from "./findPeakDay.test";
 import { ok, error, info, TEST_LEVEL, MODULE_LEVEL } from "./testUtils";
 
 let allSuccess = true;
@@ -30,7 +31,8 @@ testModule("byCycle", byCycle);
 testModule("byDay", byDay);
 testModule("compareObservations", compareObservations);
 testModule("cycleDay", cycleDay);
-// TODO: findPeakDay, infoForDay, mucusScore, postPeakDays, stamp, virtualize, throwError
+testModule("findPeakDay", findPeakDay);
+// TODO: infoForDay, mucusScore, postPeakDays, stamp, virtualize, throwError
 
 if (allSuccess) {
   console.log("OK! YOU ROCK!".white.underline.italic.bgGreen.bold);
