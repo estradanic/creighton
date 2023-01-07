@@ -1,26 +1,24 @@
 import { Observation } from "../src/types/ObservationTypes";
 
-export const dryNoMenstruationNoStretch = {
-  id: "id",
-  sensation: "dry",
-  stretchability: "none",
-  color: "na",
-  menstruation: "none",
-  consistency: "na",
-  datetime: "2021-01-01T00:00:00.000Z",
-  notes: "",
-  appearance: "dry",
-  yellowOverride: false,
-  pms: false,
-  intercourse: false,
-  coverage: "na",
-} satisfies Observation;
-
 export class OB {
   observation: Observation;
 
   constructor () {
-    this.observation = { ...dryNoMenstruationNoStretch };
+    this.observation = {
+      id: "id",
+      sensation: "dry",
+      stretchability: "none",
+      color: "na",
+      menstruation: "none",
+      consistency: "na",
+      datetime: "2021-01-01T00:00:00.000Z",
+      notes: "",
+      appearance: "dry",
+      yellowOverride: false,
+      pms: false,
+      intercourse: false,
+      coverage: "na",
+    };
   }
 
   /** smooth */

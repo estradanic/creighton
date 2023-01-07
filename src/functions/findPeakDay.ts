@@ -1,3 +1,4 @@
+import { DateTime } from "luxon";
 import { Info } from "./infoForDay";
 
 /** Function to find the peak day given cycle info */
@@ -9,14 +10,15 @@ function findPeakDay (cycle: Record<string, Info>): string | undefined {
   }
 
   // filter out days that don't have a peak observation or a down direction
-  const possibleDays = eligibleDays.filter((day) => {
-    return cycle[day].stamp.includes("peak") || cycle[day].direction === "down";
+  let possibleDays = eligibleDays.filter((day) => {
+    return cycle[day].stamp.includes("peak") ||
+      cycle[DateTime.fromISO(day).plus({ days: 1 }).toISODate()].direction === "down";
   });
 
   if (possibleDays.length === 1) {
     return possibleDays[0];
   } else if (possibleDays.length === 0) {
-    return undefined;
+    possibleDays = eligibleDays;
   }
 
   const possibleDaysWithTemps = possibleDays.map((day) => {
