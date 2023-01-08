@@ -26,7 +26,7 @@ function findPeakDay (cycle: Record<string, Info>): string | undefined {
 
   // If there are more than one, all of those are eligible.
   // If there are none, then don't change eligible days.
-  if (daysWithPeaks.length !== 0) {
+  if (daysWithPeaks.length > 1) {
     eligibleDays = daysWithPeaks;
   }
 
@@ -42,44 +42,22 @@ function findPeakDay (cycle: Record<string, Info>): string | undefined {
 
   // If there are more than one, all of those are eligible.
   // If there are none, then don't change eligible days.
-  if (daysPrecedingDownDirection.length !== 0) {
+  if (daysPrecedingDownDirection.length > 1) {
     eligibleDays = daysPrecedingDownDirection;
   }
 
   // Associate all eligible days with their temps and 3 preceding for easy data manipulation.
-  let eligibleDaysWithTemps = eligibleDays.map((day) => {
+  const eligibleDaysWithTemps = eligibleDays.map((day) => {
     const dayIndex = Object.keys(cycle).indexOf(day);
-    const dayTemps = Object.keys(cycle).slice(dayIndex - 4, dayIndex).map((day) => cycle[day].temperature);
+    const dayTemps = Object.keys(cycle).slice(dayIndex - 3, dayIndex + 1).map((day) => cycle[day].temperature);
     return { day, dayTemps };
   });
 
-  // Days with 4 preceding days of no temp decreases
+  // Days with a minimum of 0.4 difference across an ascending temp streak of 4 days
   // This will either narrow the original eligible days range if there were no peaks or down directions,
   // or it will narrow the days with peaks if there were no down directions,
   // or it will narrow the days preceding down directions if there were no peaks,
   // or it will narrow the days with peaks and preceding down directions if there were both peaks and down directions.
-  const daysWith4PrecedingDaysOfNoTempDecreases = eligibleDaysWithTemps
-    .filter((day) => day.dayTemps.every((temp) => !(temp?.includes("-"))));
-
-  // If there's only one, return it.
-  if (daysWith4PrecedingDaysOfNoTempDecreases.length === 1) {
-    return daysWith4PrecedingDaysOfNoTempDecreases[0].day;
-  }
-
-  // If there are more than one, all of those are eligible.
-  // If there are none, then don't change eligible days.
-  if (daysWith4PrecedingDaysOfNoTempDecreases.length !== 0) {
-    eligibleDays = daysWith4PrecedingDaysOfNoTempDecreases.map((day) => day.day);
-  }
-
-  // Re-associate all eligible days with their temps and 3 preceding for easy data manipulation.
-  eligibleDaysWithTemps = eligibleDays.map((day) => {
-    const dayIndex = Object.keys(cycle).indexOf(day);
-    const dayTemps = Object.keys(cycle).slice(dayIndex - 4, dayIndex).map((day) => cycle[day].temperature);
-    return { day, dayTemps };
-  });
-
-  // Days with a minimum of 0.4 difference across an ascending temp streak
   const daysWithMinimumOfFourTenthsDifferenceAcrossAscendingTempStreak =
     eligibleDaysWithTemps.filter((day) => {
       const firstTemp = parseFloat(day.dayTemps[0]?.replace(/[^0-9]/g, "") ?? "1000");
@@ -93,7 +71,7 @@ function findPeakDay (cycle: Record<string, Info>): string | undefined {
   }
 
   // If there are more than one, all of those are eligible.
-  if (daysWithMinimumOfFourTenthsDifferenceAcrossAscendingTempStreak.length !== 0) {
+  if (daysWithMinimumOfFourTenthsDifferenceAcrossAscendingTempStreak.length > 1) {
     eligibleDays = daysWithMinimumOfFourTenthsDifferenceAcrossAscendingTempStreak.map((day) => day.day);
 
     // Nothing else to narrow down, so just return the last day in the eligible days range.
