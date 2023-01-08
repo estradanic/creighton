@@ -64,7 +64,11 @@ function mucusScore (cycle: Record<string, Info>, peakDay: string | undefined): 
     }
   }
 
-  return Math.round(score / mucusCycleDays.length * 10) / 10;
+  const _mucusScore = Math.round(score / mucusCycleDays.length * 10) / 10;
+  if (isNaN(_mucusScore)) {
+    return 0;
+  }
+  return _mucusScore;
 }
 
 export default mucusScore;

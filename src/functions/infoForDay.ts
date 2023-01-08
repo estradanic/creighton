@@ -66,15 +66,15 @@ function infoForDay (observations: Observation[], dateTime: DateTime, large: boo
   const mostFertileObservationForAbbreviation = observationsForDay.sort(compareObservationsForAbbreviation)[0];
 
   let mostFertileStamp = stamp(mostFertileObservationForStamp, observationsByDay);
-  if (mostFertileStamp.includes("p-plus") && large) {
-    mostFertileStamp += " p-plus-large";
+  if (large) {
+    mostFertileStamp += " large";
   }
 
   const mostFertileAbbreviation = abbreviation(mostFertileObservationForAbbreviation, observationsForDay);
 
   let times = 1;
   observationsForDay.forEach((observation) => {
-    if (observation.id === mostFertileObservationForStamp.id) {
+    if (observation.id === mostFertileObservationForAbbreviation.id) {
       return;
     }
     const _abbreviation = abbreviation(observation, observationsForDay);

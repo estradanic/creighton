@@ -75,13 +75,16 @@ const stamp = (observation: Observation, observationsByDay: Record<string, Obser
     }
   } else if (observationsByDay[dayAfter]?.length) {
     let foundPeak = false;
+    let foundYellowStamp = false;
     for (const curObservation of observationsByDay[dayAfter] ?? []) {
       if (isPeakMucus(curObservation)) {
         foundPeak = true;
-        break;
+      }
+      if (curObservation.yellowOverride) {
+        foundYellowStamp = true;
       }
     }
-    if (!foundPeak && isPeakMucus(observation)) {
+    if ((!foundPeak && isPeakMucus(observation)) || (foundYellowStamp && !observation.yellowOverride)) {
       stamp += " p-plus peak";
     }
   }

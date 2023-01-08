@@ -91,7 +91,7 @@
   bottom: 0;
 }
 
-.p-plus-large::after {
+.p-plus.large::after {
   line-height: 1.5;
 }
 

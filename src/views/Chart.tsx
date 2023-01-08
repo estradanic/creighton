@@ -99,9 +99,9 @@ function ChartRow (props: ChartRowProps): JSX.Element {
       {
         actualPeakDay() && props.isComplete &&
           <td class="chart-metadata">
-            <span class="chart-element"><strong>MSC:</strong> {_mucusScore()}</span>
+            <span class="chart-element"><strong>MSC:</strong> {_mucusScore() || "??"}</span>
             <br />
-            <span class="chart-element"><strong>PPD:</strong> {_postPeakDays()}</span>
+            <span class="chart-element"><strong>PPD:</strong> {_postPeakDays() || "??"}</span>
           </td>
       }
     </tr>
