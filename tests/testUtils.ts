@@ -1,4 +1,5 @@
 import * as colors from "colors";
+import * as deepEqual from "deep-equal";
 
 const TAB_SPACES = "  ";
 const ASSERTION_LEVEL = 3;
@@ -62,12 +63,12 @@ export function assertShallowEquals<T> (actual: T, expected: T, message: string)
     error(ASSERTION_LEVEL, message, `...FAIL: ${actual} !== ${expected}`);
     return false;
   }
-  ok(ASSERTION_LEVEL, message, "...OK");
+  ok(ASSERTION_LEVEL, message, `...OK ${actual} === ${expected}`);
   return true;
 };
 
 export function assertDeepEquals<T> (actual: T, expected: T, message: string): boolean {
-  if (JSON.stringify(actual) !== JSON.stringify(expected)) {
+  if (!deepEqual(actual, expected)) {
     error(ASSERTION_LEVEL, message, `...FAIL: ${JSON.stringify(actual)} !== ${JSON.stringify(expected)}`);
     return false;
   }

@@ -34,7 +34,7 @@ testModule("compareObservations", compareObservations);
 testModule("cycleDay", cycleDay);
 testModule("findPeakDay", findPeakDay);
 testModule("infoForDay", infoForDay);
-// TODO: infoForDay, mucusScore, postPeakDays, stamp, virtualize, throwError
+// TODO: mucusScore, postPeakDays, stamp, virtualize, throwError
 
 if (allSuccess) {
   console.log("OK! YOU ROCK!".white.underline.italic.bgGreen.bold);

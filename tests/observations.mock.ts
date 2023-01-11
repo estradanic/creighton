@@ -21,6 +21,23 @@ export class OB {
     };
   }
 
+  id (id: string): OB {
+    this.observation.id = id;
+    return this;
+  }
+
+  /** intercourse */
+  get i (): OB {
+    this.observation.intercourse = true;
+    return this;
+  }
+
+  /** pms */
+  get pms (): OB {
+    this.observation.pms = true;
+    return this;
+  }
+
   /** smooth */
   get sm (): OB {
     this.observation.sensation = "smooth";
@@ -242,7 +259,8 @@ export const singlePeakInRange = [
 ];
 
 export const noPeakInRange = [
-  new OB().vh.r.dt("2021-01-01")._,
+  new OB().vh.r.dt("2021-01-01").pms.i._,
+  new OB().c.sh.dt("2021-01-02").tmp(97)._,
   new OB().h.r.dt("2021-01-02")._,
   new OB().h.r.dt("2021-01-03")._,
   new OB().m.r.dt("2021-01-04")._,
@@ -268,6 +286,7 @@ export const noPeakInRange = [
   new OB().str.c.dt("2021-01-24")._,
   new OB().str.c.p.dt("2021-01-25")._,
   new OB().t.cc.dt("2021-01-26")._,
+  new OB().t.cc.dt("2021-01-26").id("2nd")._,
   new OB().str.cw.p.dt("2021-01-27")._,
   new OB().str.cw.p.dt("2021-01-28")._,
   new OB().t.c.dt("2021-01-29")._,
@@ -359,7 +378,7 @@ export const multiplePeaksDifferentiatedByDirection = [
   new OB().cw.str.dt("2021-01-10")._,
   new OB().cc.str.dt("2021-01-11")._,
   new OB().t.r.dt("2021-01-12")._,
-  new OB().str.r.dt("2021-01-13")._,
+  new OB().st.r.dt("2021-01-13")._,
   new OB().str.cw.lub.dt("2021-01-14")._,
   new OB().str.cw.lub.dt("2021-01-15")._,
   new OB().str.cc.p.dt("2021-01-16")._,
