@@ -30,7 +30,7 @@ function App (): JSX.Element {
   });
   return (
     <>
-      <h1>Creighton Observation Tracker</h1>
+      <h1>My Cycle Tracker</h1>
       <div class="link-container">
         <Link href="/observations">Observations</Link>
         <span>&nbsp;|&nbsp;</span>

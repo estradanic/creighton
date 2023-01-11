@@ -12,7 +12,7 @@ function Login (): JSX.Element {
           .then(() => { window.location.href = "/observations"; })
           .catch(throwError);
       }}
-      action="https://creighton.b4a.app/login"
+      action="/login"
     >
       <input type="hidden" value="admin" name="username" />
       <label for="password">Enter Password</label>

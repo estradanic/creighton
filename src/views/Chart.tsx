@@ -132,7 +132,7 @@ function Chart (): JSX.Element {
               height: chart.scrollHeight,
             },
           })
-          .save(`creighton_chart_${DateTime.now().toUnixInteger()}.pdf`))
+          .save(`my_cycle_tracker_${DateTime.now().toUnixInteger()}.pdf`))
         .catch(throwError);
     }
   };
