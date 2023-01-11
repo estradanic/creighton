@@ -60,7 +60,7 @@ function ChartCell (props: ChartCellProps): JSX.Element {
       <span class="chart-element">
         <i>{props.dayInfo.times > 0 ? `x${props.dayInfo.times}` : <br />}</i>
         <span class={`direction ${props.dayInfo.direction}`} />
-        {props.dayInfo.intercourse && <span class="intercourse">🎔</span>}
+        {props.dayInfo.intercourse && <span class="intercourse">💞</span>}
         {props.dayInfo.pms && <span>😢</span>}
       </span>
     </td>
