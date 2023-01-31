@@ -9,6 +9,7 @@ import {
   compareObservationsForStamp,
   blurryCompareObservations,
 } from "./compareObservations";
+import { mucusScoreForDay } from "./mucusScore";
 
 export type Info = {
   stamp: string
@@ -19,6 +20,7 @@ export type Info = {
   pms: boolean
   temperature?: string
   intercourse: boolean
+  mucusScore: number
 };
 
 const DUMMY_INFO = {
@@ -29,6 +31,7 @@ const DUMMY_INFO = {
   pms: false,
   intercourse: false,
   direction: "none",
+  mucusScore: 0,
 } as const;
 
 /**
@@ -71,6 +74,8 @@ function infoForDay (observations: Observation[], dateTime: DateTime, large: boo
   }
 
   const mostFertileAbbreviation = abbreviation(mostFertileObservationForAbbreviation, observationsForDay);
+
+  const mucusScore = mucusScoreForDay(mostFertileAbbreviation);
 
   let times = 1;
   observationsForDay.forEach((observation) => {
@@ -124,6 +129,7 @@ function infoForDay (observations: Observation[], dateTime: DateTime, large: boo
     temperature: tempString,
     pms,
     intercourse,
+    mucusScore,
   };
 }
 
