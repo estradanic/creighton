@@ -311,7 +311,7 @@ table, th, td {
 }
 
 td.peak-day {
-  background-color: lightyellow;
+  border: 4px solid blue;
 }
 
 td.chart-metadata {
