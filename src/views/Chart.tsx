@@ -10,7 +10,7 @@ import ExistingObservation from "../components/ExistingObservation";
 import html2pdf from "../stores/Html2PdfStore";
 import { Html2PdfOptions } from "html2pdf.js";
 import throwError from "../functions/throwError";
-import mucusScore from "../functions/mucusScore";
+import mucusScore, { mucusScoreForDay } from "../functions/mucusScore";
 import postPeakDays from "../functions/postPeakDays";
 import findPeakDay from "../functions/findPeakDay";
 
@@ -37,6 +37,7 @@ type ChartCellProps = {
 
 function ChartCell (props: ChartCellProps): JSX.Element {
   const dayDateTime = (): DateTime => DateTime.fromISO(props.day);
+  const mucusScore = (): number => mucusScoreForDay(props.dayInfo.abbreviation);
   return (
     <td
       onClick={() => props.openDialog(observations()
@@ -45,6 +46,7 @@ function ChartCell (props: ChartCellProps): JSX.Element {
         .sort((a, b) => a.datetime.localeCompare(b.datetime)))}
       class={`clickable ${props.isPeakDay ? "peak-day" : ""}`}
     >
+      <div class="bar" style={{ top: `${100 - mucusScore() / 16 * 100}%` }}/>
       <span class="chart-element">{DateTime.fromISO(props.day).toFormat("MM/dd")}</span>
       <br />
       <strong class="chart-element temperature">
@@ -99,9 +101,9 @@ function ChartRow (props: ChartRowProps): JSX.Element {
       {
         actualPeakDay() && props.isComplete &&
           <td class="chart-metadata">
-            <span class="chart-element"><strong>MSC:</strong> {_mucusScore() || "??"}</span>
+            <span class="chart-element"><strong>MSC:</strong> {_mucusScore()}</span>
             <br />
-            <span class="chart-element"><strong>PPD:</strong> {_postPeakDays() || "??"}</span>
+            <span class="chart-element"><strong>PPD:</strong> {_postPeakDays()}</span>
           </td>
       }
     </tr>

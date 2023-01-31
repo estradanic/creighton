@@ -234,7 +234,7 @@
   right: 0;
   bottom: 0;
   background-color: var(--dim);
-  z-index: 1;
+  z-index: 3;
 }
 
 .dialog-content {
@@ -283,6 +283,20 @@
   cursor: pointer;
 }
 
+.bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  background-color: white;
+}
+
+td>:not(div) {
+  z-index: 2;
+  position: relative;
+}
+
 td>.stamp {
   height: 2rem;
   width: 1.5rem;
@@ -309,6 +323,7 @@ td {
   align-items: center;
   text-align: center;
   padding: 0.5rem;
+  position: relative;
 }
 
 body {

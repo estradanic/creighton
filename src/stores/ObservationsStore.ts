@@ -11,10 +11,10 @@ export const observations = (): Observation[] => {
   if (!loading() && !gotObservations()) {
     setLoading(true);
     new Parse.Query<Parse.Object<Observation>>("observation")
-      .descending("datetime")
-      .limit(500)
-      .find()
-      .then((results) => setObservations(results.map((result) => ({ ...result.attributes, id: result.id }))))
+      .findAll()
+      .then((results) => setObservations(results
+        .sort((a, b) => b.get("datetime").localeCompare(a.get("datetime")))
+        .map((result) => ({ ...result.attributes, id: result.id }))))
       .catch(throwError)
       .finally(() => {
         setGotObservations(true);
