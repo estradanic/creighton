@@ -37,6 +37,11 @@ type ChartCellProps = {
 
 function ChartCell (props: ChartCellProps): JSX.Element {
   const dayDateTime = (): DateTime => DateTime.fromISO(props.day);
+  const barTop = (): string => {
+    const top = `${100 - props.dayInfo.mucusScore / 16 * 100}%`;
+    if (top === "100%") return "95%";
+    return top;
+  };
   return (
     <td
       onClick={() => props.openDialog(observations()
@@ -45,9 +50,7 @@ function ChartCell (props: ChartCellProps): JSX.Element {
         .sort((a, b) => a.datetime.localeCompare(b.datetime)))}
       class={`clickable ${props.isPeakDay ? "peak-day" : ""}`}
     >
-      {props.dayInfo.mucusScore > 0 &&
-        <div class="bar" style={{ top: `${100 - props.dayInfo.mucusScore / 16 * 100}%` }} />
-      }
+      <div class="bar" style={{ top: barTop() }} />
       <span class="chart-element">{DateTime.fromISO(props.day).toFormat("MM/dd")}</span>
       <br />
       <strong class="chart-element temperature">
