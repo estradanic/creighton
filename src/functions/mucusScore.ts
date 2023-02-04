@@ -45,32 +45,28 @@ export function mucusScoreForDay (abbreviation: string): number {
 
 /** Function to calculate the mucus score given a cycle and the peak day */
 function mucusScore (cycle: Record<string, Info>, peakDay: string | undefined): string {
-  if (peakDay === undefined || Object.values(cycle).every((day) => day.cycleDay === "??")) {
+  if (peakDay === undefined) {
     return "??";
   }
 
-  let mucusCycleDays = Object.keys(cycle).filter((day) =>
-    DateTime.fromISO(day).diff(DateTime.fromISO(peakDay)).as("days") <= 0 &&
-      !(cycle[day].abbreviation.startsWith("H") ||
-        cycle[day].abbreviation.startsWith("M")
-      ) &&
-      Object.keys(cycle).slice(Object.keys(cycle).indexOf(day)).every((day) =>
-        !(cycle[day].abbreviation.startsWith("H") ||
-          cycle[day].abbreviation.startsWith("M"))));
-
-  mucusCycleDays = mucusCycleDays
-    .filter((day) => mucusCycleDays.slice(0, mucusCycleDays.indexOf(day) + 1).some((day) =>
-      !(cycle[day].abbreviation.includes("0AD")) &&
-      !(cycle[day].abbreviation.startsWith("L")) &&
-      !(cycle[day].abbreviation.startsWith("VL"))));
-
-  let score = 0;
-
-  for (const day of mucusCycleDays) {
-    score += mucusScoreForDay(cycle[day].abbreviation);
+  // get 7 days before peak day inclusive
+  const mucusCycleDays: string[] = [];
+  let day = DateTime.fromISO(peakDay);
+  for (let i = 0; i < 6; i++) {
+    mucusCycleDays.push(day.toISODate());
+    day = day.minus({ days: 1 });
   }
 
-  const _mucusScore = Math.round(score / mucusCycleDays.length * 10) / 10;
+  let score = 0;
+  for (const day of mucusCycleDays) {
+    if (cycle[day]?.abbreviation) {
+      score += mucusScoreForDay(cycle[day].abbreviation);
+    } else {
+      return "??";
+    }
+  }
+
+  const _mucusScore = Math.round(score / 6 * 10) / 10;
   if (isNaN(_mucusScore)) {
     return "??";
   }
