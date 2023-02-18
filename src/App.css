@@ -283,15 +283,22 @@
   cursor: pointer;
 }
 
-.bar {
+.line {
   position: absolute;
-  bottom: 0;
-  left: 2px;
-  right: 2px;
-  z-index: 1;
-  background-color: white;
-  border-radius: 6px 6px 0 0;
-  box-shadow: inset 0 2px 2px gray;
+  inset: 0;
+}
+
+.line>polyline {
+  stroke-width: 2;
+  stroke-opacity: 0.6;
+}
+
+.mucus-line>polyline {
+  stroke: blue;
+}
+
+.temp-line>polyline {
+  stroke: red;
 }
 
 td>:not(div) {
@@ -308,8 +315,9 @@ td>.stamp {
 }
 
 table, th, td {
-  border: 1px solid black;
+  border: 2px solid gray;
   background-color: lightcyan;
+  border-collapse: collapse;
 }
 
 td.peak-day {

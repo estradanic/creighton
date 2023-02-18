@@ -1,4 +1,4 @@
-import { createMemo, createSignal, For, Index, JSX } from "solid-js";
+import { createMemo, createSignal, For, Index, JSX, onMount } from "solid-js";
 import { DateTime } from "luxon";
 import byCycle from "../functions/byCycle";
 import byDay from "../functions/byDay";
@@ -31,26 +31,78 @@ const HTML_2_PDF_OPTIONS = {
 type ChartCellProps = {
   day: string
   dayInfo: Info
+  previousDayInfo: Info | null
   openDialog: (observations: Observation[]) => void
   isPeakDay: boolean
 };
 
 function ChartCell (props: ChartCellProps): JSX.Element {
+  const [cell, setCell] = createSignal<HTMLTableCellElement | undefined>();
+
+  onMount(() => {
+    setCell(document.getElementById(props.day) as HTMLTableCellElement);
+  });
+
   const dayDateTime = (): DateTime => DateTime.fromISO(props.day);
-  const barTop = (): string => {
-    const top = `${100 - props.dayInfo.mucusScore / 16 * 100}%`;
-    if (top === "100%") return "95%";
-    return top;
+  const mucusPoints = (): string => {
+    const height = cell()?.clientHeight;
+    const width = cell()?.clientWidth;
+    if (!height || !width) {
+      return "";
+    }
+    const points: string[] = [];
+    if (props.previousDayInfo) {
+      points.push(`0,${height - props.previousDayInfo.mucusScore / 16 * height}`);
+    } else {
+      points.push(`0,${height}`);
+    }
+    points.push(`${width},${height - props.dayInfo.mucusScore / 16 * height}`);
+    return points.join(" ");
   };
+
+  const temperaturePoints = (): string => {
+    if (!props.dayInfo.temperature || props.dayInfo.temperature === "-") return "";
+    const height = cell()?.clientHeight;
+    const width = cell()?.clientWidth;
+    if (!height || !width) {
+      return "";
+    }
+    const points: string[] = [];
+    const numericTemp = parseFloat(props.dayInfo.temperature.replace(/[^0-9.]/g, ""));
+    const tempHeight = height - (numericTemp - 96.5) / 2.5 * height;
+    points.push(`${width},${tempHeight}`);
+    if (props.previousDayInfo?.temperature && props.previousDayInfo.temperature !== "-") {
+      const prevNumericTemp = parseFloat(props.previousDayInfo.temperature.replace(/[^0-9.]/g, ""));
+      points.push(`0,${height - (prevNumericTemp - 96.5) / 2.5 * height}`);
+    } else {
+      points.push(`0,${tempHeight}`);
+    }
+    if (isNaN(tempHeight)) {
+      console.log(props.dayInfo);
+    }
+
+    return points.join(" ");
+  };
+
   return (
     <td
+      id={props.day}
       onClick={() => props.openDialog(observations()
         .filter((observation) =>
           DateTime.fromISO(observation.datetime).hasSame(dayDateTime(), "day"))
         .sort((a, b) => a.datetime.localeCompare(b.datetime)))}
       class={`clickable ${props.isPeakDay ? "peak-day" : ""}`}
     >
-      <div class="bar" style={{ top: barTop() }} />
+      {!!mucusPoints() &&
+        <svg class="line mucus-line">
+          <polyline points={mucusPoints()} />
+        </svg>
+      }
+      {!!temperaturePoints() &&
+        <svg class="line temp-line">
+          <polyline points={temperaturePoints()} />
+        </svg>
+      }
       <span class="chart-element">{DateTime.fromISO(props.day).toFormat("MM/dd")}</span>
       <br />
       <strong class="chart-element temperature">
@@ -93,14 +145,18 @@ function ChartRow (props: ChartRowProps): JSX.Element {
     <tr>
       <For
         each={Object.keys(props.cycle)}
-        children={(day, i) => (
-          <ChartCell
-            dayInfo={dayInfos()[day]}
-            day={day}
-            openDialog={props.openDialog}
-            isPeakDay={actualPeakDay() === day && props.isComplete}
-          />
-        )}
+        children={(day, i) => {
+          const previousDay = i() > 0 ? Object.keys(props.cycle)[i() - 1] : null;
+          return (
+            <ChartCell
+              previousDayInfo={previousDay === null ? null : dayInfos()[previousDay]}
+              dayInfo={dayInfos()[day]}
+              day={day}
+              openDialog={props.openDialog}
+              isPeakDay={actualPeakDay() === day && props.isComplete}
+            />
+          );
+        }}
       />
       {
         actualPeakDay() && props.isComplete &&
