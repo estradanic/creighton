@@ -19,6 +19,7 @@ export function testInfoForDay (): boolean {
       pms: false,
       stamp: "",
       times: 0,
+      mucusScore: 0,
     }, "returns dummy info object if there are no observations"),
     assertShallowEquals(infoForDay(noPeakInRange, DateTime.fromISO("2021-01-01"), false).stamp,
       stamp(noPeakInRange[0], byDay(noPeakInRange)),

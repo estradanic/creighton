@@ -30,7 +30,7 @@ const stamp = (observation: Observation, observationsByDay: Record<string, Obser
       break;
     }
   }
-  if (!dayHasPeakMucus || observation.yellowOverride) {
+  if ((!dayHasPeakMucus || observation.yellowOverride)) {
     if (observationsByDay[dayBefore]?.length &&
         observationsByDay[dayBefore].filter((o) => o.yellowOverride).length === 0) {
       for (const curObservation of observationsByDay[dayBefore] ?? []) {

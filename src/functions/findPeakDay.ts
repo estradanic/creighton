@@ -78,8 +78,13 @@ function findPeakDay (cycle: Record<string, Info>): string | undefined {
     return eligibleDays[eligibleDays.length - 1];
   }
 
-  // If there are no eligible days, return undefined.
-  return undefined;
+  // If there are no eligible days, or if nothing has narrowed anything down exit.
+  if (eligibleDays.length === 0 || eligibleDays.length === daysNinthToSeventeenthFromCycleEnd.length) {
+    return undefined;
+  }
+
+  // Return the last day in the eligible days range. Nothing else to narrow down.
+  return eligibleDays[eligibleDays.length - 1];
 }
 
 export default findPeakDay;
