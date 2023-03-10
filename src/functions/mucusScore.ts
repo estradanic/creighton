@@ -24,6 +24,7 @@ export function mucusScoreForDay (abbreviation: string): number {
     case "10DL":
     case "6K":
     case "8K":
+    case "8KG":
     case "10C":
     case "10KP":
       return 8;

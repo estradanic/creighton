@@ -286,6 +286,8 @@
 .line {
   position: absolute;
   inset: 0;
+  max-width: 100%;
+  fill: none;
 }
 
 .line>polyline {
