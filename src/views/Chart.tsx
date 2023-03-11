@@ -57,9 +57,9 @@ function ChartCell (props: ChartCellProps): JSX.Element {
     const tomorrowHeight = props.nextDayInfo ? height - props.nextDayInfo.mucusScore / 16 * height : height;
     const leftHeight = (previousDayHeight + todayHeight) / 2;
     const rightHeight = (todayHeight + tomorrowHeight) / 2;
-    points.push(`0,${leftHeight}`);
+    points.push(`-1,${leftHeight}`);
     points.push(`${width / 2},${todayHeight}`);
-    points.push(`${width},${rightHeight}`);
+    points.push(`${width + 1},${rightHeight}`);
     return points.join(" ");
   };
 
