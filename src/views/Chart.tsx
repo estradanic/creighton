@@ -32,6 +32,7 @@ type ChartCellProps = {
   day: string
   dayInfo: Info
   previousDayInfo: Info | null
+  nextDayInfo: Info | null
   openDialog: (observations: Observation[]) => void
   isPeakDay: boolean
 };
@@ -51,12 +52,14 @@ function ChartCell (props: ChartCellProps): JSX.Element {
       return "";
     }
     const points: string[] = [];
-    if (props.previousDayInfo) {
-      points.push(`0,${height - props.previousDayInfo.mucusScore / 16 * height}`);
-    } else {
-      points.push(`0,${height}`);
-    }
-    points.push(`${width},${height - props.dayInfo.mucusScore / 16 * height}`);
+    const previousDayHeight = props.previousDayInfo ? height - props.previousDayInfo.mucusScore / 16 * height : height;
+    const todayHeight = height - props.dayInfo.mucusScore / 16 * height;
+    const tomorrowHeight = props.nextDayInfo ? height - props.nextDayInfo.mucusScore / 16 * height : height;
+    const leftHeight = (previousDayHeight + todayHeight) / 2;
+    const rightHeight = (todayHeight + tomorrowHeight) / 2;
+    points.push(`0,${leftHeight}`);
+    points.push(`${width / 2},${todayHeight}`);
+    points.push(`${width},${rightHeight}`);
     return points.join(" ");
   };
 
@@ -147,8 +150,10 @@ function ChartRow (props: ChartRowProps): JSX.Element {
         each={Object.keys(props.cycle)}
         children={(day, i) => {
           const previousDay = i() > 0 ? Object.keys(props.cycle)[i() - 1] : null;
+          const nextDay = i() < Object.keys(props.cycle).length - 1 ? Object.keys(props.cycle)[i() + 1] : null;
           return (
             <ChartCell
+              nextDayInfo={nextDay === null ? null : dayInfos()[nextDay]}
               previousDayInfo={previousDay === null ? null : dayInfos()[previousDay]}
               dayInfo={dayInfos()[day]}
               day={day}
