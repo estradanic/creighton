@@ -14,6 +14,9 @@ import mucusScore from "../functions/mucusScore";
 import postPeakDays from "../functions/postPeakDays";
 import findPeakDay from "../functions/findPeakDay";
 
+const [showTemperatures, setShowTemperatures] = createSignal(true);
+const [showMucusScore, setShowMucusScore] = createSignal(true);
+
 const JS_PDF_OPTIONS = {
   unit: "in",
   format: "letter",
@@ -46,6 +49,9 @@ function ChartCell (props: ChartCellProps): JSX.Element {
 
   const dayDateTime = (): DateTime => DateTime.fromISO(props.day);
   const mucusPoints = (): string => {
+    if (!showMucusScore()) {
+      return "";
+    }
     const height = cell()?.clientHeight;
     const width = cell()?.clientWidth;
     if (!height || !width) {
@@ -64,6 +70,9 @@ function ChartCell (props: ChartCellProps): JSX.Element {
   };
 
   const temperaturePoints = (): string => {
+    if (!showTemperatures()) {
+      return "";
+    }
     if (!props.dayInfo.temperature || props.dayInfo.temperature === "-") return "";
     const height = cell()?.clientHeight;
     const width = cell()?.clientWidth;
@@ -73,12 +82,12 @@ function ChartCell (props: ChartCellProps): JSX.Element {
     const points: string[] = [];
     const numericTemp = parseFloat(props.dayInfo.temperature.replace(/[^0-9.]/g, ""));
     const tempHeight = height - (numericTemp - 96.5) / 2.5 * height;
-    points.push(`${width},${tempHeight}`);
+    points.push(`${width + 1},${tempHeight}`);
     if (props.previousDayInfo?.temperature && props.previousDayInfo.temperature !== "-") {
       const prevNumericTemp = parseFloat(props.previousDayInfo.temperature.replace(/[^0-9.]/g, ""));
-      points.push(`0,${height - (prevNumericTemp - 96.5) / 2.5 * height}`);
+      points.push(`-1,${height - (prevNumericTemp - 96.5) / 2.5 * height}`);
     } else {
-      points.push(`0,${tempHeight}`);
+      points.push(`-1,${tempHeight}`);
     }
     if (isNaN(tempHeight)) {
       console.log(props.dayInfo);
@@ -108,9 +117,11 @@ function ChartCell (props: ChartCellProps): JSX.Element {
       }
       <span class="chart-element">{DateTime.fromISO(props.day).toFormat("MM/dd")}</span>
       <br />
-      <strong class="chart-element temperature">
-        {props.dayInfo.temperature}
-      </strong>
+      {showTemperatures() &&
+        <strong class="chart-element temperature">
+          {props.dayInfo.temperature}
+        </strong>
+      }
       <br />
       <span class={`stamp ${props.dayInfo.stamp} chart-element`}>&nbsp;&nbsp;&nbsp;</span>
       <br />
@@ -250,7 +261,25 @@ function Chart (): JSX.Element {
                   </tbody>
                 </table>
               </div>
-              <input type="button" value="Print Chart" onClick={printChart} />
+              <div>
+                <label for="show-temperatures">Show Temperatures</label>
+                <input
+                  id="show-temperatures"
+                  type="checkbox"
+                  checked={showTemperatures()}
+                  onClick={() => setShowTemperatures(!showTemperatures())}
+                />
+                <br />
+                <label for="show-mucus">Show Mucus Score</label>
+                <input
+                  id="show-mucus"
+                  type="checkbox"
+                  checked={showMucusScore()}
+                  onClick={() => setShowMucusScore(!showMucusScore())}
+                />
+                <br />
+                <input type="button" value="Print Chart" onClick={printChart} />
+              </div>
             </>
             )
       }
