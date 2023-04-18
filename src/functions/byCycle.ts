@@ -1,5 +1,6 @@
 import { Observation } from "../types/ObservationTypes";
 import { isFirstCycleDay } from "./assertions";
+import { loadAll } from "../stores/ObservationsStore";
 
 function byCycle (observationsByDay: Record<string, Observation[]>): Array<Record<string, Observation[]>> {
   const observationsByCycle: Array<Record<string, Observation[]>> = [];
@@ -19,7 +20,19 @@ function byCycle (observationsByDay: Record<string, Observation[]>): Array<Recor
     observationsByCycle[currentCycle][day] = observationsByDay[day];
   });
 
-  return observationsByCycle;
+  if (loadAll()) {
+    return observationsByCycle;
+  }
+
+  return observationsByCycle.filter((cycle) => {
+    let hasMenstruation = false;
+    Object.keys(cycle).forEach((day) => {
+      if (cycle[day].filter((observation) => observation.menstruation !== "none").length > 0) {
+        hasMenstruation = true;
+      }
+    });
+    return hasMenstruation;
+  });
 }
 
 export default byCycle;

@@ -3,6 +3,7 @@ import { JSX, lazy, onMount } from "solid-js";
 import { Routes, Route, Link } from "@solidjs/router";
 import Parse from "parse";
 import throwError from "./functions/throwError";
+import { loadAll, setLoadAll, refresh } from "./stores/ObservationsStore";
 
 const Observations = lazy(async () => await import("./views/Observations"));
 const Login = lazy(async () => await import("./views/Login"));
@@ -31,7 +32,7 @@ function App (): JSX.Element {
   return (
     <>
       <h1>My Cycle Tracker</h1>
-      <div class="link-container">
+      <div class="top-element-container">
         <Link href="/observations">Observations</Link>
         <span>&nbsp;|&nbsp;</span>
         <Link href="/chart">Chart</Link>
@@ -44,6 +45,18 @@ function App (): JSX.Element {
         >
           Logout
         </Link>
+      </div>
+      <div class="top-element-container">
+        <label for="load-all">Load All Observations (Slow)</label>
+        <input
+          type="checkbox"
+          name="load-all"
+          checked={loadAll()}
+          onChange={(e) => {
+            setLoadAll(e.currentTarget.checked);
+            refresh();
+          }}
+        />
       </div>
       <Routes>
         <Route path="/" component={Login} />
