@@ -1,5 +1,5 @@
 import "./App.css";
-import { JSX, lazy, onMount } from "solid-js";
+import { JSX, Show, lazy, onMount } from "solid-js";
 import { Routes, Route, Link } from "@solidjs/router";
 import Parse from "parse";
 import throwError from "./functions/throwError";
@@ -15,6 +15,7 @@ Parse.initialize(
   "WpWOMB0WXQ1vGl3EnSNi657F88BL2ClLSPgJAmgN",
 );
 
+// TODO: Signalize this
 function isOnLoginPage (): boolean {
   return window.location.href.split("/").filter((hrefPart) => {
     return hrefPart === "observations" || hrefPart === "chart";
@@ -46,18 +47,20 @@ function App (): JSX.Element {
           Logout
         </Link>
       </div>
-      <div class="top-element-container">
-        <label for="load-all">Load All Observations (Slow)</label>
-        <input
-          type="checkbox"
-          name="load-all"
-          checked={loadAll()}
-          onChange={(e) => {
-            setLoadAll(e.currentTarget.checked);
-            refresh();
-          }}
-        />
-      </div>
+      <Show when={!isOnLoginPage()}>
+        <div class="top-element-container">
+          <label for="load-all">Load All Observations (Slow)</label>
+          <input
+            type="checkbox"
+            name="load-all"
+            checked={loadAll()}
+            onChange={(e) => {
+              setLoadAll(e.currentTarget.checked);
+              refresh();
+            }}
+          />
+        </div>
+      </Show>
       <Routes>
         <Route path="/" component={Login} />
         <Route path="/login" component={Login} />
